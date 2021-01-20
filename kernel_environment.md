@@ -18,7 +18,8 @@
 ```shell
 # cd ~/sandbox
 # git clone https://github.com/buildroot/buildroot buildroot
-# cd buildroot; make menuconfig
+# cd buildroot
+# make menuconfig
  Target optins -> x86_64
  Filesystem images -> cpio the root filesystem image
                       Compression method (xz)
