@@ -83,13 +83,13 @@ git push origin master 合并到远程master分支
 git push origin dev 合并到远程dev分支
 git checkout -b dev origin/dev  创建本地dev分支并与远程dev链接，同时切换到本地dev分支
 git pull 远程同步到本地仓库
-git branch --set-upsteam dev orgin/dev
+git branch --set-upsteam dev origin/dev
 ```
 * step1. git push orgin branch-name 推送自己的修改
 * step2. 如果推送失败,先用git pull试图合并
 * step3. 如果合并有冲突, 则解决冲突，并在本地提交
 * step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送
-如果"no tracking information", 需要建立本地和远程分支的链接 "git branch --set-upsteam dev orgin/dev"
+如果"no tracking information", 需要建立本地和远程分支的链接 "git branch --set-upsteam dev origin/dev"
 
 ### 创建标签 ###
 ```shell
