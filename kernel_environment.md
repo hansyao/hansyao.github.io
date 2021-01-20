@@ -11,7 +11,7 @@
 # make olddefconfig
 # make dep-pkg -j7
 # cd ..
-# sudo dpkg -i deepinos.deb
+# sudo dpkg -i *.deb
 # sudo reboot
 ```
 ## 2. Build buildroot
