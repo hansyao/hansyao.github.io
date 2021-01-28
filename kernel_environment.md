@@ -1,5 +1,6 @@
 
 # kernel 学习环境搭建
+--by Hans Yao
 
 ## 1. Build/install upstream kernel as host
 ```shell
