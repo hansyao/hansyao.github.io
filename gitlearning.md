@@ -51,6 +51,7 @@ git remote add origin git@github.com:hansyao/myrepository.git
 * step3. 提交到远程仓库
 ```shell
 git push -u origin master   (-u参数：和远程分支关联)
+git push origin --delete <branchName> 删除远程分支
 ```	
 从远程库克隆到本地库
 ```shell
