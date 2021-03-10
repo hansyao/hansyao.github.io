@@ -34,6 +34,7 @@ git reflog  未来日志</code></pre>
 <li>step2. 关联远程仓库<pre><code class="language-shell">git remote add origin git@github.com:hansyao/myrepository.git</code></pre>
 </li>
 <li>step3. 提交到远程仓库<pre><code class="language-shell">git push -u origin master   (-u参数：和远程分支关联)</code></pre>
+	</li>
 <p>从远程库克隆到本地库</p>
 <pre><code class="language-shell">git clone git@github.com:hansyao/myrepository.git       (https协议较慢，最好这样用ssh协议)</code></pre>
 <p>创建合并分支</p>
@@ -50,7 +51,6 @@ git stash apply 恢复stash工作区
 git stash apply stash@{0}
 git stash drop 删除stash工作区
 git stash pop 恢复的同时删除stash工作区</code></pre>
-</li>
 
 <p>多人协作</p>
 <pre><code class="language-shell">git remote  查看远程分支
