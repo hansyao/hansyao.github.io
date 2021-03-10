@@ -42,7 +42,7 @@ git rm filename1.txt
 (版本库里有，工作区删除掉了，可用git checkout -- filename1.txt恢复)
 ```
 
-### 链接远程库 ###
+## 链接远程库 ##
 * step1. 密钥
 * step2. 关联远程仓库
 ```shell
@@ -57,7 +57,7 @@ git push origin --delete <branchName> 删除远程分支
 ```shell
 git clone git@github.com:hansyao/myrepository.git		(https协议较慢，最好这样用ssh协议)
 ```
-### 创建合并分支 ###
+## 创建合并分支 ##
 ```shell
 git branch  查看分支
 git branch name	创建分支
@@ -92,14 +92,14 @@ git branch --set-upsteam dev origin/dev
 * step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送
 如果"no tracking information", 需要建立本地和远程分支的链接 "git branch --set-upsteam dev origin/dev"
 
-### 创建标签 ###
+## 创建标签 ##
 ```shell
 git tag 查看所有标签
 git tag v0.1 打名为v0.1的标签
 git tag v0.1 commit_ID
 git show v0.1 查看标签详细信息
 ```
-### 忽略特殊文件 ###
+## 忽略特殊文件 ##
 ```shell
 .gitignore
 ```
