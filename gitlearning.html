@@ -48,16 +48,19 @@ git checkout name 切换分支
 git checkout -b name 创建+切换分支
 git merge name 合并name到当前分支
 git branch -d name 删除分支</code></pre>
-	<p>bug分支</p>
+</ul>
+<h2>bug分支</h2>
+<ul>
 	<pre><code class="language-shell">git stash 储藏当前工作区
 git stash list
 git stash apply 恢复stash工作区
 git stash apply stash@{0}
 git stash drop 删除stash工作区
 git stash pop 恢复的同时删除stash工作区</code></pre>
-
-	<p>多人协作</p>
-	<pre><code class="language-shell">git remote  查看远程分支
+</ul>
+<h2>多人协作</h>
+	<ul>
+		<pre><code class="language-shell">git remote  查看远程分支
 git remote -v 查看远程分支详细信息
 git push origin master 合并到远程master分支
 git push origin dev 合并到远程dev分支
@@ -65,22 +68,22 @@ git checkout -b dev origin/dev  创建本地dev分支并与远程dev链接，同
 git pull 远程同步到本地仓库
 git branch --set-upsteam dev orgin/dev</code></pre>
 
-	<li>step1. git push orgin branch-name 推送自己的修改</li>
-	<li>step2. 如果推送失败,先用git pull试图合并</li>
-	<li>step3. 如果合并有冲突, 则解决冲突，并在本地提交</li>
-	<li>step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送
-		如果"no tracking information", 需要建立本地和远程分支的链接 "git branch --set-upsteam dev orgin/dev"</li>
-</ul>
-<h2>创建标签</h2>
-<ul>
-	<pre><code class="language-shell">git tag 查看所有标签
+		<li>step1. git push orgin branch-name 推送自己的修改</li>
+		<li>step2. 如果推送失败,先用git pull试图合并</li>
+		<li>step3. 如果合并有冲突, 则解决冲突，并在本地提交</li>
+		<li>step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送
+			如果"no tracking information", 需要建立本地和远程分支的链接 "git branch --set-upsteam dev orgin/dev"</li>
+	</ul>
+	<h2>创建标签</h2>
+	<ul>
+		<pre><code class="language-shell">git tag 查看所有标签
 git tag v0.1 打名为v0.1的标签
 git tag v0.1 commit_ID
 git show v0.1 查看标签详细信息</code></pre>
-</ul>
-<h2>忽略特殊文件</h2>
-<ul>
-	<pre><code class="language-shell">.gitignore</code></pre>
-</ul>
+	</ul>
+	<h2>忽略特殊文件</h2>
+	<ul>
+		<pre><code class="language-shell">.gitignore</code></pre>
+	</ul>
 
 </html>
