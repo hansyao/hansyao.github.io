@@ -66,7 +66,7 @@ git checkout -b name 创建+切换分支
 git merge name 合并name到当前分支
 git branch -d name 删除分支
 ```
-bug分支
+## bug分支 ##
 ```shell
 git stash 储藏当前工作区
 git stash list
@@ -76,7 +76,7 @@ git stash drop 删除stash工作区
 git stash pop 恢复的同时删除stash工作区
 ```
 
-多人协作
+## 多人协作 ##
 ```shell
 git remote  查看远程分支
 git remote -v 查看远程分支详细信息
