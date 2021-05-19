@@ -5,6 +5,7 @@ date: 2021-05-20
 Author: Hans Yao
 tags: [Linux Kernel, 教程]
 comments: false
+toc: true
 ---
 
 ## 1. Build/install upstream kernel as host

@@ -5,6 +5,7 @@ date: 2021-05-20
 Author: Hans Yao
 tags: [Linux, WSL2, 教程]
 comments: false
+toc: true
 ---
 
 Think Xfce looks dated? Want a conventional Ubuntu experience? This tutorial will guide you through installing Ubuntu's default desktop environment, GNOME.

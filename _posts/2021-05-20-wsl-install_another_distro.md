@@ -5,6 +5,7 @@ date: 2021-05-20
 Author: Hans Yao
 tags: [Linux, WSL2, 教程]
 comments: false
+toc: false
 ---
 
 1. Here are some default vars for the process
