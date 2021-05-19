@@ -189,6 +189,7 @@ GEM
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     unicode-display_width (1.7.0)
+    webrick (1.7.0)
 
 PLATFORMS
   ruby
@@ -200,6 +201,7 @@ DEPENDENCIES
   jekyll-paginate
   kramdown
   rough
+  webrick
 
 BUNDLED WITH
    1.17.3
