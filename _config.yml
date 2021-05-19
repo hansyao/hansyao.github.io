@@ -1,14 +1,14 @@
 
 title: My Resume
-url: 'http://hansyao.github.io'
-baseurl: '' #change it according to your repository name
+url: 'http://junlulocky.com'
+baseurl: '/PanelCV' #change it according to your repository name
 
 
 
 # Profile information
-yourname: Hans Yao  ## put your name
+yourname: Brown Smith  ## put your name
 title: 'GRAPHIC &amp; WEB DESIGNER'  ## your title
-location: Shanghai, China
+location: San Francisco , CA
 
 
 ## Social Profiles
