@@ -334,4 +334,4 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 
 
 
-自此，历经<font color=#0099ff size=5 face="黑体">步骤一</font>到<font color=#0099ff size=5 face="黑体">步骤八</font>，我们所有按键均修复完成，可以愉快地玩耍了。。。。。。
+自此，历经<span style="color:blue; font-size:1.2em"> **步骤一** </span> 到 <span style="color:blue; font-size:1.2em"> **步骤八** </span> ，我们所有按键均修复完成，可以愉快地玩耍了。。。。。。
