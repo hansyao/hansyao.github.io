@@ -42,7 +42,7 @@ toc: true
     ioio -s ApplePS2Keyboard LogScanCodes 1
     watch "sudo dmesg | grep ApplePS2Keyboard | tail -20"
     ```
-    并赋予可执行权限 ` chmod 755 ./ioio_debug.sh `。 （注：如没有watch命令需要安装 `brew install watch`)
+    并赋予可执行权限 `chmod 755 ./ioio_debug.sh`。 （注：如没有watch命令需要安装 `brew install watch`)
 
 5. 终端下运行`./ioio_debug.sh`测试键位调试是否成功,成功后终端会有以下输出  
     ```   
