@@ -2,6 +2,16 @@ pre, code {
   font-family: $code-font;
 }
 
+//keyboard keys style 
+kbd {
+  border-radius: 6px;
+  padding: 1px 2px 0;
+  border: 1px solid gainsboro;
+  border-bottom: 0.5px solid grey;
+  border-right: 0.5px solid grey;
+  background-color: lightgray
+}
+
 code.highlighter-rouge {
   font-size: 90%;
   color: $oc-indigo-9;
