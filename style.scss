@@ -47,21 +47,28 @@ h1, h2, h3, h5 {
 }
 
 h1 {
-  font-size: 22px;
+  font-size: 20px;
   a {
     color: inherit;
   }
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 18px;
+  // color: blueviolet;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 16px;
+  // color: chocolate
 }
 
 h4 {
+  font-size: 16px;
+  color: $base-lighten-color;
+}
+
+h5 {
   font-size: 16px;
   color: $base-lighten-color;
 }

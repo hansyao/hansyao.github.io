@@ -22,7 +22,8 @@ toc: true
 
 &nbsp;
 
-## **步骤一** 准备工作 
+## **步骤一** 准备工作
+ 
 工欲善其事，必先利其器。为了修复工作，我们先做准备。
 1. 抓取[DrHurt](https://github.com/DrHurt)的远程仓库[VoodooPS2Controller](https://github.com/DrHurt/OS-X-ALPS-DRIVER)
     ```
