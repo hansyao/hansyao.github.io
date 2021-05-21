@@ -3,7 +3,7 @@ layout: post
 title: Dell Precision M4800 AppleALC声卡驱动修复教程
 date: 2021-05-20
 Author: Hans Yao
-tags: [黑苹果, Mac, 教程]
+tags: [原创, 黑苹果, Mac, 教程]
 comments: false
 toc: true
 ---

@@ -3,7 +3,7 @@ layout: post
 title: Dell Precision M4800 VoodooPS2Controller 键盘/触控驱动修复过程
 date: 2021-05-20
 Author: Hans Yao
-tags: [黑苹果, Mac, 教程]
+tags: [原创, 黑苹果, Mac, 教程]
 comments: false
 toc: true
 ---
