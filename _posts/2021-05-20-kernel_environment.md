@@ -3,7 +3,7 @@ layout: post
 title: 学习笔记 - kernel 学习环境搭建
 date: 2021-05-20
 Author: Hans Yao
-tags: [Linux Kernel, 教程]
+tags: [Linux, Kernel, 教程]
 comments: false
 toc: true
 ---
