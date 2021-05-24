@@ -90,7 +90,7 @@ toc: true
 然后在 `bool ApplePS2Keyboard::init(OSDictionary * dict)` 函数加一行 "`_numKeypadLocked = true;`" 初始化`_numKeypadLocked`变量.
 
 下一步再在 `dispatchKeyboardEventWithPacket`函数的`switch (keyCode)`方法中加入数字锁定键 **[0x45]** 的执行逻辑如下:
-```
+```c++
 bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 {
 
@@ -147,7 +147,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 ```
 
 最后在键盘初始化函数initkeyboard里加入一行代码 "`setNumLockFeedback(_numKeypadLocked)；`" 启用开机小键盘数字键锁定Num Lock。
-```
+```c++
 void ApplePS2Keyboard::initKeyboard()
 {
     //......
@@ -169,9 +169,9 @@ void ApplePS2Keyboard::initKeyboard()
 
 第二步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将亮度调节键映射到<kbd>F14</kbd>和<kbd>F15</kbd>。
 
-```
-e005=6b;FN+down arrow to brightness down
-e006=71;FN+up arrow to brightness up
+```xml
+<string>e005=6b;FN+down arrow to brightness down</string>
+<string>e006=71;FN+up arrow to brightness up</string>
 ```
 
 原生亮度调节键修复完成。
@@ -183,7 +183,7 @@ e006=71;FN+up arrow to brightness up
 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>F5</kbd>得到PS2键位码为 **[e01e]** 。
 在 `dispatchKeyboardEventWithPacket`函数的`switch (keyCode)`方法中加入 **[0x011e]** (*注:e0为扩展码标志，程序执行为0x01*)的执行逻辑如下:
 
-```
+```c++
 bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 {
     // handle special cases
@@ -223,7 +223,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 第一步: 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>End</kbd>/<kbd>Home</kbd>得到PS2键位码为 **[e037]** 
 
 第二步: 分析源码，我们可以看到源码中有`case 0x0137:`的执行逻辑是将 **[e037]** 映射到了触控板控制开关。所以，我们将原这段代码删除或者注释掉。
-```
+```c++
 //        case 0x0128:    // alternate that cannot fnkeys toggle (discrete trackpad toggle)
 //        case 0x0137:    // prt sc/sys rq
 //        {
@@ -247,7 +247,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 ```
 第三步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>SysRq</kbd>和<kbd>PrntScrn</kbd>映射到<kbd>F13</kbd>
 
-```
+```xml
 <string>e037=69;fn+Home/End to F13</string>
 ```
 第四步: 编译打包，将生成的**ApplePS2Controller.kext**复制到`/EFI/OC/Kexts/`替换掉原来的文件，重启。打开系统偏好设置>键盘>快捷键, 将截屏映射到<kbd>SysRq</kbd>/<kbd>PrntScrn</kbd>（<kbd>F13</kbd>）。
@@ -259,7 +259,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 第一步: 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>Insert</kbd>得到PS2键位码为 **[e045]**
 
 第二步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>Pause</kbd>(<kbd>Fn</kbd>+<kbd>Insert</kbd>)映射到<kbd>F18</kbd>。
-```
+```xml
 <string>e045=4f;fn+insert to F18</string>
 ```
 第三步: 重复 **步骤五** >第四步 将<kbd>Pause</kbd>(<kbd>Fn</kbd>+<kbd>Insert</kbd>)映射到你需要的功能键。
@@ -272,7 +272,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 第一步: 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>Insert</kbd>得到PS2键位码为 **[e021]**
 
 第二步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>Calc</kbd>映射到<kbd>F19</kbd>。
-```
+```xml
 <string>e021=50;Calc to F19</string>
 ```
 第三步: 编译打包，将生成的**ApplePS2Controller.kext**复制到`/EFI/OC/Kexts/`替换掉原来的文件，重启
@@ -288,7 +288,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 第二步: 分析源码**VoodooPS2Keyboard.cpp**, 得到` case 0x0153 ` 的运作逻辑是屏蔽了<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd>以避免触发电源开关造成异常关机. 
         为了实现与Windows一样的锁屏效果，修改` case 0x0153 `源码如下将<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd>映射到<kbd>Ctrl</kbd>+<kbd>Command</kbd>+<kbd>Q</kbd>。
 
-```
+```c++
 bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 {
     // handle special cases

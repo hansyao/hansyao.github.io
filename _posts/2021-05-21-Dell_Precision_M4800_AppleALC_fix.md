@@ -54,7 +54,7 @@ toc: true
 2. **查找所有节点** （此步骤也可在Mac下执行）
    
    整理所有节点并记录到Excel模板`pinconfigs.xlsx`里, Linux环境可以安装个`WPS`。输入命令`verbit.sh codec#0`得到以下屏幕打印信息
-   ```
+   ```bash
    % ../hda-tools/verbit.sh codec#0
 
    Verbs from Linux Codec Dump File: codec#0
@@ -98,7 +98,7 @@ toc: true
 3. **查找有效节点**
    
    然后再执行命令`dmesg | grep hdaaudio` 得到有效节点:
-   ```
+   ```bash
       % dmesg | grep hdaudio
    [    6.890268] snd_hda_codec_realtek hdaudioC1D0: autoconfig for ALC3226: line_outs=1 (0x16/0x0/0x0/0x0/0x0) type:line
    [    6.890276] snd_hda_codec_realtek hdaudioC1D0:    speaker_outs=1 (0x14/0x0/0x0/0x0/0x0)
@@ -227,7 +227,7 @@ Linux上能干的活儿我们都干完了，只待进入Mac改写AppleALC了， 
 5. 在`AppleALC/Resources/ALC292/`路径中复制其他layout和Platforms文件改名为`layout59.xml`和`Platforms59.xml`
 6. 根据我们前面Excel文件生成的路径, 改写 `Platforms59.xml`文件，填入我们自己的路径。(具体改写方法可参考其他Platforms文件的例子)
 7. 修改`layout59.xml`文件里的`layoutid`和`PathMapID`为59。(注: `PathMapID`不一定需要和`layoutid`保持一致,但必须和`AppleALC/Resources/ALC292/Info.plist/Files/Layouts/`与`AppleALC/Resources/ALC292/Info.plist/Files/Platforms/`的`ID`保持一致)
-   ```
+   ```xml
    <key>LayoutID</key>
 	<integer>59</integer>
 
