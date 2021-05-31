@@ -40,6 +40,10 @@ navigation:
     url: /archive
   - name: 标签
     url: /tags
+  - name: 联系方式
+    url: /map
+  - name: 联系方式2
+    url: /map2
 
 # 每页的文章数
 paginate: 8
@@ -89,6 +93,15 @@ footer-text: Copyright (c) 2021 Hans Yao
 utteranc:
   repo: # Your github repo path, also see: https://hansyao.github.io
 
+maps:
+  google:
+    api_key: AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE
+
+location:
+  latitude: 51.5285582
+  longitude: -0.2416807
+
+
 #
 # !! 以下所有设置都不需要更改 !!
 #
@@ -113,11 +126,13 @@ kramdown:
 sass:
   style: :expanded # You might prefer to minify using :compressed
 
+
 # Use the following plug-ins
 plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
   - jekyll-paginate
+  - jekyll-maps
 
 # Exclude these files from your production _site
 exclude:
