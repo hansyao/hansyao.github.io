@@ -1,0 +1,1656 @@
+<script type='text/javascript'>
+  /* global google */
+/* global MarkerClusterer */
+// eslint-disable-next-line no-unused-vars
+var jekyllMaps = (function() {
+  'use strict'
+  var clusterSettings = {}
+  var clusterReady = false
+  var mapReady = false
+  var options = {}
+  var data = []
+  var maps = []
+
+  return {
+    initializeMap: initializeMap,
+    initializeCluster: initializeCluster,
+    register: register
+  }
+
+  /**
+   * Setup Google Maps options and call renderer.
+   */
+  function initializeMap() {
+    options = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      center: new google.maps.LatLng(0, 0),
+      styles: []
+    }
+    mapReady = true
+    render()
+  }
+
+  /**
+   * Register map data to be rendered once Google Maps API is loaded.
+   *
+   * @param string id
+   * @param Array locations
+   * @param Object settings
+   */
+  function register(id, locations, options) {
+    data.push({ id: id, locations: locations, options: options })
+    render()
+  }
+
+  /**
+   * Render maps data if Google Maps API is loaded.
+   */
+  function render() {
+    if (!mapReady) return
+
+    while (data.length > 0) {
+      var item = data.pop()
+      var bounds = new google.maps.LatLngBounds()
+      var mapOptions = Object.assign({}, options, item.options)
+      var map = new google.maps.Map(
+        document.getElementById(item.id),
+        mapOptions
+      )
+      var infoWindow = new google.maps.InfoWindow()
+      var markers = item.locations.map(createMarker)
+
+      map.fitBounds(bounds)
+      google.maps.event.addListenerOnce(map, 'idle', function() {
+        if (this.customZoom) this.setZoom(this.customZoom)
+      })
+      if (mapOptions.useCluster) {
+        maps.push({ map: map, markers: markers })
+        processCluster()
+      }
+    }
+
+    function createMarker(location) {
+      var position = new google.maps.LatLng(
+        location.latitude,
+        location.longitude
+      )
+      bounds.extend(position)
+      if (!mapOptions.showMarker) return false
+
+      var marker = new google.maps.Marker({
+        position: position,
+        title: location.title,
+        image: location.image,
+        popup_html: location.popup_html,
+        icon: location.icon || mapOptions.markerIcon,
+        url: markerUrl(mapOptions.baseUrl, location.url),
+        url_text: location.url_text,
+        map: map
+      })
+      if (mapOptions.showMarkerPopup) marker.addListener('click', markerPopup)
+
+      return marker
+    }
+
+    function markerUrl(baseUrl, url) {
+      if (/^(https?|\/\/)/.test(url)) return url
+
+      return url.length > 0 ? baseUrl + url : ''
+    }
+
+    function markerPopup() {
+      var content = '<div class="map-info-window"><h5>' + this.title + '</h5>'
+      if (this.popup_html.length > 0) {
+        content += this.popup_html
+      }
+      else {
+        var imageTag =
+          this.image.length > 0 &&
+          '<img src="' + this.image + '" alt="' + this.title + '"/>'
+        if (this.url.length > 0) {
+          var linkContent = imageTag || this.url_text || 'View'
+          content += '<a href="' + this.url + '">' + linkContent + '</a>'
+        } else if (imageTag) {
+          content += imageTag
+        }
+      }
+      content += '</div>'
+      infoWindow.setContent(content)
+      infoWindow.open(map, this)
+    }
+  }
+
+  function initializeCluster(settings) {
+    clusterReady = true
+    clusterSettings = settings || {}
+    processCluster()
+  }
+
+  function processCluster() {
+    if (!clusterReady) return
+
+    while (maps.length > 0) {
+      var obj = maps.pop()
+      // eslint-disable-next-line no-new
+      new MarkerClusterer(obj.map, obj.markers, {
+        gridSize: clusterSettings.grid_size || 25,
+        imagePath:
+          'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+      })
+    }
+  }
+})()
+/* Object.assign polyfill */
+if (typeof Object.assign !== 'function') {
+  Object.assign = function(target) {
+    'use strict'
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object')
+    }
+
+    target = Object(target)
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index]
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key]
+          }
+        }
+      }
+    }
+    return target
+  }
+}
+
+</script>
+<script type='text/javascript'>
+  /* global google */
+/* global MarkerClusterer */
+// eslint-disable-next-line no-unused-vars
+var jekyllMaps = (function() {
+  'use strict'
+  var clusterSettings = {}
+  var clusterReady = false
+  var mapReady = false
+  var options = {}
+  var data = []
+  var maps = []
+
+  return {
+    initializeMap: initializeMap,
+    initializeCluster: initializeCluster,
+    register: register
+  }
+
+  /**
+   * Setup Google Maps options and call renderer.
+   */
+  function initializeMap() {
+    options = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      center: new google.maps.LatLng(0, 0),
+      styles: []
+    }
+    mapReady = true
+    render()
+  }
+
+  /**
+   * Register map data to be rendered once Google Maps API is loaded.
+   *
+   * @param string id
+   * @param Array locations
+   * @param Object settings
+   */
+  function register(id, locations, options) {
+    data.push({ id: id, locations: locations, options: options })
+    render()
+  }
+
+  /**
+   * Render maps data if Google Maps API is loaded.
+   */
+  function render() {
+    if (!mapReady) return
+
+    while (data.length > 0) {
+      var item = data.pop()
+      var bounds = new google.maps.LatLngBounds()
+      var mapOptions = Object.assign({}, options, item.options)
+      var map = new google.maps.Map(
+        document.getElementById(item.id),
+        mapOptions
+      )
+      var infoWindow = new google.maps.InfoWindow()
+      var markers = item.locations.map(createMarker)
+
+      map.fitBounds(bounds)
+      google.maps.event.addListenerOnce(map, 'idle', function() {
+        if (this.customZoom) this.setZoom(this.customZoom)
+      })
+      if (mapOptions.useCluster) {
+        maps.push({ map: map, markers: markers })
+        processCluster()
+      }
+    }
+
+    function createMarker(location) {
+      var position = new google.maps.LatLng(
+        location.latitude,
+        location.longitude
+      )
+      bounds.extend(position)
+      if (!mapOptions.showMarker) return false
+
+      var marker = new google.maps.Marker({
+        position: position,
+        title: location.title,
+        image: location.image,
+        popup_html: location.popup_html,
+        icon: location.icon || mapOptions.markerIcon,
+        url: markerUrl(mapOptions.baseUrl, location.url),
+        url_text: location.url_text,
+        map: map
+      })
+      if (mapOptions.showMarkerPopup) marker.addListener('click', markerPopup)
+
+      return marker
+    }
+
+    function markerUrl(baseUrl, url) {
+      if (/^(https?|\/\/)/.test(url)) return url
+
+      return url.length > 0 ? baseUrl + url : ''
+    }
+
+    function markerPopup() {
+      var content = '<div class="map-info-window"><h5>' + this.title + '</h5>'
+      if (this.popup_html.length > 0) {
+        content += this.popup_html
+      }
+      else {
+        var imageTag =
+          this.image.length > 0 &&
+          '<img src="' + this.image + '" alt="' + this.title + '"/>'
+        if (this.url.length > 0) {
+          var linkContent = imageTag || this.url_text || 'View'
+          content += '<a href="' + this.url + '">' + linkContent + '</a>'
+        } else if (imageTag) {
+          content += imageTag
+        }
+      }
+      content += '</div>'
+      infoWindow.setContent(content)
+      infoWindow.open(map, this)
+    }
+  }
+
+  function initializeCluster(settings) {
+    clusterReady = true
+    clusterSettings = settings || {}
+    processCluster()
+  }
+
+  function processCluster() {
+    if (!clusterReady) return
+
+    while (maps.length > 0) {
+      var obj = maps.pop()
+      // eslint-disable-next-line no-new
+      new MarkerClusterer(obj.map, obj.markers, {
+        gridSize: clusterSettings.grid_size || 25,
+        imagePath:
+          'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+      })
+    }
+  }
+})()
+/* Object.assign polyfill */
+if (typeof Object.assign !== 'function') {
+  Object.assign = function(target) {
+    'use strict'
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object')
+    }
+
+    target = Object(target)
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index]
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key]
+          }
+        }
+      }
+    }
+    return target
+  }
+}
+
+</script>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-05-31T17:34:16+08:00</updated><id>/feed.xml</id><title type="html">Hans Yao’s Personal Blog</title><subtitle>老姚的博客</subtitle><entry><title type="html">google map sample</title><link href="/googlemap-sample/" rel="alternate" type="text/html" title="google map sample" /><published>2021-05-29T00:00:00+08:00</published><updated>2021-05-29T00:00:00+08:00</updated><id>/googlemap-sample</id><content type="html" xml:base="/googlemap-sample/">&lt;div id=&quot;c5976741-c8bf-4495-ac2d-e9b13e19e5f9&quot; style=&quot;width:600px;height:400px;&quot; class=&quot; jekyll-map&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  jekyllMaps.register(
+    'c5976741-c8bf-4495-ac2d-e9b13e19e5f9',
+    [],
+    {&quot;baseUrl&quot;:&quot;/&quot;,&quot;useCluster&quot;:true,&quot;showMarker&quot;:true,&quot;showMarkerPopup&quot;:true,&quot;markerIcon&quot;:null,&quot;styles&quot;:&quot;[]&quot;}
+  );
+&lt;/script&gt;
+
+&lt;div id=&quot;5809667b-81e3-4ad2-ad88-e17b34f6192f&quot; style=&quot;width:600px;height:400px;&quot; class=&quot; jekyll-map&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  jekyllMaps.register(
+    '5809667b-81e3-4ad2-ad88-e17b34f6192f',
+    [{&quot;latitude&quot;:51.5285582,&quot;longitude&quot;:-0.2416807,&quot;title&quot;:&quot;博客使用基础教程&quot;,&quot;icon&quot;:null,&quot;url&quot;:&quot;/document/&quot;,&quot;url_text&quot;:null,&quot;image&quot;:&quot;&quot;,&quot;popup_html&quot;:&quot;&quot;}],
+    {&quot;baseUrl&quot;:&quot;/&quot;,&quot;useCluster&quot;:true,&quot;showMarker&quot;:true,&quot;showMarkerPopup&quot;:true,&quot;markerIcon&quot;:null,&quot;styles&quot;:&quot;[]&quot;}
+  );
+&lt;/script&gt;</content><author><name></name></author><category term="原创" /><category term="google map" /><summary type="html"></summary></entry><entry><title type="html">谷歌地图api国内访问</title><link href="/google-map-nginx/" rel="alternate" type="text/html" title="谷歌地图api国内访问" /><published>2021-05-27T00:00:00+08:00</published><updated>2021-05-27T00:00:00+08:00</updated><id>/google-map-nginx</id><content type="html" xml:base="/google-map-nginx/">&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt;
+&lt;p&gt;由于业务需求，需要使用谷歌地图API，但是由于众所周之的原因在国内不能访问谷歌地图，所以决定使用 nginx 做一下反代，保证图层可以获取到。&lt;/p&gt;
+
+&lt;p&gt;准备工作：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;一台可国内访问的云主机（我用的是白嫖的Oracle alway free美国服务器）&lt;/li&gt;
+  &lt;li&gt;google开发者账号，并开通启用&lt;a href=&quot;https://developers.google.com/maps&quot;&gt;google map API&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;准备&lt;a href=&quot;https://github.com/openresty/replace-filter-nginx-module&quot;&gt;replace-filter-nginx-module&lt;/a&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/openresty/replace-filter-nginx-module
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;第一步--部署nginx&quot;&gt;第一步  部署nginx&lt;/h1&gt;
+
+&lt;p&gt;我原本用的是&lt;a href=&quot;https://github.com/oneinstack/oneinstack&quot;&gt;oneinstack&lt;/a&gt;的一键安装脚本，已经部署好了所以免了这一步骤。没有部署的话需要部署。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   git clone https://github.com/oneinstack/oneinstack
+   &lt;span class=&quot;nb&quot;&gt;chmod &lt;/span&gt;755 oneinstack        
+   &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;oneinstack
+   &lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; /install.sh        &lt;span class=&quot;c&quot;&gt;#按自己需要配置安装选项&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h1 id=&quot;第二步--为nginx加载replace-filter-nginx-module&quot;&gt;第二步  为nginx加载&lt;a href=&quot;https://github.com/openresty/replace-filter-nginx-module&quot;&gt;replace-filter-nginx-module&lt;/a&gt;&lt;/h1&gt;
+
+&lt;p&gt;先安装&lt;a href=&quot;https://github.com/agentzh/sregex&quot;&gt;sregex&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   git clone https://github.com/agentzh/sregex
+   cd sregex
+   make
+   sudo make install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;再安装&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace-filter-nginx-module&lt;/code&gt;, 这里我们重新编译nginx将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replace-filter-nginx-module&lt;/code&gt;包含进去。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;oneinstack/src/nginx      &lt;span class=&quot;c&quot;&gt;#进入oneinstack安装nginx时的源码目录，或者直接nginx官网下载最新版也可&lt;/span&gt;
+   &lt;span class=&quot;nv&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;           &lt;span class=&quot;c&quot;&gt;#获取当前nginx编译配置参数&lt;/span&gt;
+   ./configure &lt;span class=&quot;nv&quot;&gt;$config&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--add-module&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./replace-filter-nginx-module       &lt;span class=&quot;c&quot;&gt;#第一步git clone下来的路径&lt;/span&gt;
+   make &lt;span class=&quot;nt&quot;&gt;-j8&lt;/span&gt;
+   &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;第三步骤&quot;&gt;第三步骤&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;to be continue …&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><category term="原创" /><category term="google" /><category term="教程" /><summary type="html">前言 由于业务需求，需要使用谷歌地图API，但是由于众所周之的原因在国内不能访问谷歌地图，所以决定使用 nginx 做一下反代，保证图层可以获取到。 准备工作： 一台可国内访问的云主机（我用的是白嫖的Oracle alway free美国服务器） google开发者账号，并开通启用google map API 准备replace-filter-nginx-module git clone https://github.com/openresty/replace-filter-nginx-module 第一步 部署nginx 我原本用的是oneinstack的一键安装脚本，已经部署好了所以免了这一步骤。没有部署的话需要部署。 git clone https://github.com/oneinstack/oneinstack chmod 755 oneinstack cd oneinstack sudo /install.sh #按自己需要配置安装选项 第二步 为nginx加载replace-filter-nginx-module 先安装sregex git clone https://github.com/agentzh/sregex cd sregex make sudo make install 再安装replace-filter-nginx-module, 这里我们重新编译nginx将replace-filter-nginx-module包含进去。 cd oneinstack/src/nginx #进入oneinstack安装nginx时的源码目录，或者直接nginx官网下载最新版也可 config=$(nginx -V) #获取当前nginx编译配置参数 ./configure $config --add-module=./replace-filter-nginx-module #第一步git clone下来的路径 make -j8 sudo make install 第三步骤 to be continue …</summary></entry><entry><title type="html">Cloudflare 优选IP自动测速记录表</title><link href="/cloudflareip/" rel="alternate" type="text/html" title="Cloudflare 优选IP自动测速记录表" /><published>2021-05-27T00:00:00+08:00</published><updated>2021-05-27T00:00:00+08:00</updated><id>/cloudflareip</id><content type="html" xml:base="/cloudflareip/">&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;优选IP&lt;/th&gt;
+      &lt;th&gt;实测带宽&lt;/th&gt;
+      &lt;th&gt;峰值速度&lt;/th&gt;
+      &lt;th&gt;数据中心&lt;/th&gt;
+      &lt;th&gt;优选_经纬度&lt;/th&gt;
+      &lt;th&gt;优选_国家&lt;/th&gt;
+      &lt;th&gt;优选_区域&lt;/th&gt;
+      &lt;th&gt;优选_城市&lt;/th&gt;
+      &lt;th&gt;实测地_经纬度&lt;/th&gt;
+      &lt;th&gt;实测地_国家&lt;/th&gt;
+      &lt;th&gt;实测地_区域&lt;/th&gt;
+      &lt;th&gt;实测地_城市&lt;/th&gt;
+      &lt;th&gt;测试耗时&lt;/th&gt;
+      &lt;th&gt;测试时间&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.186&lt;/td&gt;
+      &lt;td&gt;153 Mbps&lt;/td&gt;
+      &lt;td&gt;19,660 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;46 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.229&lt;/td&gt;
+      &lt;td&gt;166 Mbps&lt;/td&gt;
+      &lt;td&gt;21,299 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;94 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.18.76.40&lt;/td&gt;
+      &lt;td&gt;100 Mbps&lt;/td&gt;
+      &lt;td&gt;12,800 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;141 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.127.222&lt;/td&gt;
+      &lt;td&gt;159 Mbps&lt;/td&gt;
+      &lt;td&gt;20,377 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;189 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.152.248&lt;/td&gt;
+      &lt;td&gt;138 Mbps&lt;/td&gt;
+      &lt;td&gt;17,715 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;238 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.19.169.108&lt;/td&gt;
+      &lt;td&gt;160 Mbps&lt;/td&gt;
+      &lt;td&gt;20,480 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;288 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.176.118&lt;/td&gt;
+      &lt;td&gt;168 Mbps&lt;/td&gt;
+      &lt;td&gt;21,606 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;336 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.184.21&lt;/td&gt;
+      &lt;td&gt;165 Mbps&lt;/td&gt;
+      &lt;td&gt;21,196 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;387 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.236&lt;/td&gt;
+      &lt;td&gt;160 Mbps&lt;/td&gt;
+      &lt;td&gt;20,480 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;440 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.164.234&lt;/td&gt;
+      &lt;td&gt;159 Mbps&lt;/td&gt;
+      &lt;td&gt;20,377 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;492 秒&lt;/td&gt;
+      &lt;td&gt;20210527-160504&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.221.101&lt;/td&gt;
+      &lt;td&gt;160 Mbps&lt;/td&gt;
+      &lt;td&gt;20,480 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;46 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.186&lt;/td&gt;
+      &lt;td&gt;169 Mbps&lt;/td&gt;
+      &lt;td&gt;21,708 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;95 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.125.198&lt;/td&gt;
+      &lt;td&gt;145 Mbps&lt;/td&gt;
+      &lt;td&gt;18,636 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;143 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.151.231&lt;/td&gt;
+      &lt;td&gt;175 Mbps&lt;/td&gt;
+      &lt;td&gt;22,425 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;191 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.103.27&lt;/td&gt;
+      &lt;td&gt;168 Mbps&lt;/td&gt;
+      &lt;td&gt;21,606 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;243 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.205.237&lt;/td&gt;
+      &lt;td&gt;162 Mbps&lt;/td&gt;
+      &lt;td&gt;20,787 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;293 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.229&lt;/td&gt;
+      &lt;td&gt;156 Mbps&lt;/td&gt;
+      &lt;td&gt;19,968 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;345 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.79.84&lt;/td&gt;
+      &lt;td&gt;136 Mbps&lt;/td&gt;
+      &lt;td&gt;17,510 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;403 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.248.248&lt;/td&gt;
+      &lt;td&gt;164 Mbps&lt;/td&gt;
+      &lt;td&gt;21,094 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;41.8781,-87.6298&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;453 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.186&lt;/td&gt;
+      &lt;td&gt;168 Mbps&lt;/td&gt;
+      &lt;td&gt;21,606 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;-27.4766,153.0166&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;31.2337,121.5319&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;503 秒&lt;/td&gt;
+      &lt;td&gt;20210527-162156&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.23.104&lt;/td&gt;
+      &lt;td&gt;167 Mbps&lt;/td&gt;
+      &lt;td&gt;21,401 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;56 秒&lt;/td&gt;
+      &lt;td&gt;20210527-170921&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.68.222&lt;/td&gt;
+      &lt;td&gt;168 Mbps&lt;/td&gt;
+      &lt;td&gt;21,504 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;106 秒&lt;/td&gt;
+      &lt;td&gt;20210527-170921&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.116.199&lt;/td&gt;
+      &lt;td&gt;109 Mbps&lt;/td&gt;
+      &lt;td&gt;14,028 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;157 秒&lt;/td&gt;
+      &lt;td&gt;20210527-170921&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.18.74.81&lt;/td&gt;
+      &lt;td&gt;158 Mbps&lt;/td&gt;
+      &lt;td&gt;20,275 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;47 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.237.183&lt;/td&gt;
+      &lt;td&gt;169 Mbps&lt;/td&gt;
+      &lt;td&gt;21,708 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;102 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.88.164&lt;/td&gt;
+      &lt;td&gt;157 Mbps&lt;/td&gt;
+      &lt;td&gt;20,172 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;157 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.18.223.232&lt;/td&gt;
+      &lt;td&gt;170 Mbps&lt;/td&gt;
+      &lt;td&gt;21,811 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;205 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.16.27.124&lt;/td&gt;
+      &lt;td&gt;167 Mbps&lt;/td&gt;
+      &lt;td&gt;21,401 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;254 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.186.149&lt;/td&gt;
+      &lt;td&gt;166 Mbps&lt;/td&gt;
+      &lt;td&gt;21,299 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;56 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173910&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.18.204&lt;/td&gt;
+      &lt;td&gt;155 Mbps&lt;/td&gt;
+      &lt;td&gt;19,865 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;105 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173910&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.103&lt;/td&gt;
+      &lt;td&gt;162 Mbps&lt;/td&gt;
+      &lt;td&gt;20,787 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=-27.4766,153.0166&quot;&gt;-27.4766,153.0166&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;154 秒&lt;/td&gt;
+      &lt;td&gt;20210527-173910&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.224&lt;/td&gt;
+      &lt;td&gt;170 Mbps&lt;/td&gt;
+      &lt;td&gt;21,811 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=-27.4766,153.0166&quot;&gt;-27.4766,153.0166&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;47 秒&lt;/td&gt;
+      &lt;td&gt;20210527-174253&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.17.235.162&lt;/td&gt;
+      &lt;td&gt;166 Mbps&lt;/td&gt;
+      &lt;td&gt;21,299 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;96 秒&lt;/td&gt;
+      &lt;td&gt;20210527-174253&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.0.0.156&lt;/td&gt;
+      &lt;td&gt;167 Mbps&lt;/td&gt;
+      &lt;td&gt;21,401 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=-27.4766,153.0166&quot;&gt;-27.4766,153.0166&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Australia&lt;/td&gt;
+      &lt;td&gt;Queensland&lt;/td&gt;
+      &lt;td&gt;South Brisbane&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=31.2337,121.5319&quot;&gt;31.2337,121.5319&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Shanghai&lt;/td&gt;
+      &lt;td&gt;Pudong&lt;/td&gt;
+      &lt;td&gt;154 秒&lt;/td&gt;
+      &lt;td&gt;20210527-174253&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.213.149&lt;/td&gt;
+      &lt;td&gt;84 Mbps&lt;/td&gt;
+      &lt;td&gt;10,752 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;48 秒&lt;/td&gt;
+      &lt;td&gt;20210527-180848&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.22.23.142&lt;/td&gt;
+      &lt;td&gt;61 Mbps&lt;/td&gt;
+      &lt;td&gt;7,888 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;48 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.89.74&lt;/td&gt;
+      &lt;td&gt;81 Mbps&lt;/td&gt;
+      &lt;td&gt;10,444 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;107 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.35.102&lt;/td&gt;
+      &lt;td&gt;60 Mbps&lt;/td&gt;
+      &lt;td&gt;7,736 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;158 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.93.79&lt;/td&gt;
+      &lt;td&gt;80 Mbps&lt;/td&gt;
+      &lt;td&gt;10,240 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;207 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.18.31.165&lt;/td&gt;
+      &lt;td&gt;80 Mbps&lt;/td&gt;
+      &lt;td&gt;10,342 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;256 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.22.23.203&lt;/td&gt;
+      &lt;td&gt;83 Mbps&lt;/td&gt;
+      &lt;td&gt;10,649 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;316 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.213.253&lt;/td&gt;
+      &lt;td&gt;85 Mbps&lt;/td&gt;
+      &lt;td&gt;10,956 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;376 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.22.23.142&lt;/td&gt;
+      &lt;td&gt;55 Mbps&lt;/td&gt;
+      &lt;td&gt;7,143 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;429 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.18.132.217&lt;/td&gt;
+      &lt;td&gt;73 Mbps&lt;/td&gt;
+      &lt;td&gt;9,437 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;477 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.20.35.102&lt;/td&gt;
+      &lt;td&gt;76 Mbps&lt;/td&gt;
+      &lt;td&gt;9,764 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;527 秒&lt;/td&gt;
+      &lt;td&gt;20210527-181024&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.213.253&lt;/td&gt;
+      &lt;td&gt;84 Mbps&lt;/td&gt;
+      &lt;td&gt;10,854 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;58 秒&lt;/td&gt;
+      &lt;td&gt;20210527-182105&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;104.21.213.253&lt;/td&gt;
+      &lt;td&gt;86 Mbps&lt;/td&gt;
+      &lt;td&gt;11,059 kB/s&lt;/td&gt;
+      &lt;td&gt;AS13335 Cloudflare, Inc.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=41.8781,-87.6298&quot;&gt;41.8781,-87.6298&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;United States&lt;/td&gt;
+      &lt;td&gt;Illinois&lt;/td&gt;
+      &lt;td&gt;Chicago&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https:///www.google.com/maps?q=39.9822,116.306&quot;&gt;39.9822,116.306&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;China&lt;/td&gt;
+      &lt;td&gt;Beijing&lt;/td&gt;
+      &lt;td&gt;Haidian&lt;/td&gt;
+      &lt;td&gt;117 秒&lt;/td&gt;
+      &lt;td&gt;20210527-182105&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name></name></author><category term="原创" /><category term="cloudflare" /><summary type="html">优选IP 实测带宽 峰值速度 数据中心 优选_经纬度 优选_国家 优选_区域 优选_城市 实测地_经纬度 实测地_国家 实测地_区域 实测地_城市 测试耗时 测试时间 1.0.0.186 153 Mbps 19,660 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 46 秒 20210527-160504 1.0.0.229 166 Mbps 21,299 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 94 秒 20210527-160504 104.18.76.40 100 Mbps 12,800 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 141 秒 20210527-160504 104.16.127.222 159 Mbps 20,377 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 189 秒 20210527-160504 104.16.152.248 138 Mbps 17,715 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 238 秒 20210527-160504 104.19.169.108 160 Mbps 20,480 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 288 秒 20210527-160504 104.17.176.118 168 Mbps 21,606 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 336 秒 20210527-160504 104.17.184.21 165 Mbps 21,196 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 387 秒 20210527-160504 1.0.0.236 160 Mbps 20,480 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 440 秒 20210527-160504 104.17.164.234 159 Mbps 20,377 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 492 秒 20210527-160504 104.17.221.101 160 Mbps 20,480 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 46 秒 20210527-162156 1.0.0.186 169 Mbps 21,708 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 95 秒 20210527-162156 104.17.125.198 145 Mbps 18,636 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 143 秒 20210527-162156 104.17.151.231 175 Mbps 22,425 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 191 秒 20210527-162156 104.17.103.27 168 Mbps 21,606 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 243 秒 20210527-162156 104.16.205.237 162 Mbps 20,787 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 293 秒 20210527-162156 1.0.0.229 156 Mbps 19,968 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 345 秒 20210527-162156 104.20.79.84 136 Mbps 17,510 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 403 秒 20210527-162156 104.20.248.248 164 Mbps 21,094 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 453 秒 20210527-162156 1.0.0.186 168 Mbps 21,606 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 503 秒 20210527-162156 104.16.23.104 167 Mbps 21,401 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 56 秒 20210527-170921 104.20.68.222 168 Mbps 21,504 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 106 秒 20210527-170921 104.16.116.199 109 Mbps 14,028 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 157 秒 20210527-170921 104.18.74.81 158 Mbps 20,275 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 47 秒 20210527-173343 104.17.237.183 169 Mbps 21,708 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 102 秒 20210527-173343 104.16.88.164 157 Mbps 20,172 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 157 秒 20210527-173343 104.18.223.232 170 Mbps 21,811 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 205 秒 20210527-173343 104.16.27.124 167 Mbps 21,401 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 254 秒 20210527-173343 104.17.186.149 166 Mbps 21,299 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 56 秒 20210527-173910 104.20.18.204 155 Mbps 19,865 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 105 秒 20210527-173910 1.0.0.103 162 Mbps 20,787 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 154 秒 20210527-173910 1.0.0.224 170 Mbps 21,811 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 47 秒 20210527-174253 104.17.235.162 166 Mbps 21,299 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 31.2337,121.5319 China Shanghai Pudong 96 秒 20210527-174253 1.0.0.156 167 Mbps 21,401 kB/s AS13335 Cloudflare, Inc. -27.4766,153.0166 Australia Queensland South Brisbane 31.2337,121.5319 China Shanghai Pudong 154 秒 20210527-174253 104.21.213.149 84 Mbps 10,752 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 48 秒 20210527-180848 104.22.23.142 61 Mbps 7,888 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 48 秒 20210527-181024 104.21.89.74 81 Mbps 10,444 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 107 秒 20210527-181024 104.20.35.102 60 Mbps 7,736 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 158 秒 20210527-181024 104.21.93.79 80 Mbps 10,240 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 207 秒 20210527-181024 104.18.31.165 80 Mbps 10,342 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 256 秒 20210527-181024 104.22.23.203 83 Mbps 10,649 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 316 秒 20210527-181024 104.21.213.253 85 Mbps 10,956 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 376 秒 20210527-181024 104.22.23.142 55 Mbps 7,143 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 429 秒 20210527-181024 104.18.132.217 73 Mbps 9,437 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 477 秒 20210527-181024 104.20.35.102 76 Mbps 9,764 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 527 秒 20210527-181024 104.21.213.253 84 Mbps 10,854 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 58 秒 20210527-182105 104.21.213.253 86 Mbps 11,059 kB/s AS13335 Cloudflare, Inc. 41.8781,-87.6298 United States Illinois Chicago 39.9822,116.306 China Beijing Haidian 117 秒 20210527-182105</summary></entry><entry><title type="html">Googlemapapiproxy</title><link href="/googlemapapiproxy/" rel="alternate" type="text/html" title="Googlemapapiproxy" /><published>2021-05-27T00:00:00+08:00</published><updated>2021-05-27T00:00:00+08:00</updated><id>/googlemapapiproxy</id><content type="html" xml:base="/googlemapapiproxy/">&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cat googlemapapi.json&lt;/td&gt;
+      &lt;td&gt;jq -r&lt;/td&gt;
+      &lt;td&gt;grep https://&lt;/td&gt;
+      &lt;td&gt;awk -F’”’ ‘{print $2}’&lt;/td&gt;
+      &lt;td&gt;awk -F’/’ ‘{print $3}’&lt;/td&gt;
+      &lt;td&gt;sort&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;curl https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&lt;/td&gt;
+      &lt;td&gt;cat googlemapapi.json&lt;/td&gt;
+      &lt;td&gt;jq -r&lt;/td&gt;
+      &lt;td&gt;grep https://&lt;/td&gt;
+      &lt;td&gt;awk -F’”’ ‘{print $2}’&lt;/td&gt;
+      &lt;td&gt;awk -F’/’ ‘{print $3}’&lt;/td&gt;
+      &lt;td&gt;sort &amp;gt; googlemapdomain.txt&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cat googlemapapi.js&lt;/td&gt;
+      &lt;td&gt;grep “apiLoad([”&lt;/td&gt;
+      &lt;td&gt;cut -d ( -f 2&lt;/td&gt;
+      &lt;td&gt;jq -r&lt;/td&gt;
+      &lt;td&gt;grep https://&lt;/td&gt;
+      &lt;td&gt;awk -F’”’ ‘{print $2}’&lt;/td&gt;
+      &lt;td&gt;awk -F’/’ ‘{print $3}’&lt;/td&gt;
+      &lt;td&gt;sort -n&lt;/td&gt;
+      &lt;td&gt;uniq &amp;gt; googlemapdomainlist.txt&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;curl -X POST https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&lt;/td&gt;
+      &lt;td&gt;grep “apiLoad([”&lt;/td&gt;
+      &lt;td&gt;cut -d ( -f 2&lt;/td&gt;
+      &lt;td&gt;jq -r&lt;/td&gt;
+      &lt;td&gt;grep https://&lt;/td&gt;
+      &lt;td&gt;awk -F’”’ ‘{print $2}’&lt;/td&gt;
+      &lt;td&gt;awk -F’/’ ‘{print $3}’&lt;/td&gt;
+      &lt;td&gt;sort -n&lt;/td&gt;
+      &lt;td&gt;uniq &amp;gt; googlemapdomainlist.txt&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;curl -X POST https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&lt;/td&gt;
+      &lt;td&gt;grep “apiLoad([”&lt;/td&gt;
+      &lt;td&gt;cut -d ( -f 2&lt;/td&gt;
+      &lt;td&gt;sed ‘s/, loadScriptTime);//g’&lt;/td&gt;
+      &lt;td&gt;jq -r&lt;/td&gt;
+      &lt;td&gt;grep https://&lt;/td&gt;
+      &lt;td&gt;awk -F’”’ ‘{print $2}’&lt;/td&gt;
+      &lt;td&gt;awk -F’/’ ‘{print $3}’&lt;/td&gt;
+      &lt;td&gt;sort -n&lt;/td&gt;
+      &lt;td&gt;uniq &amp;gt; googlemapdomainlist.txt&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name></name></author><summary type="html">cat googlemapapi.json jq -r grep https:// awk -F’”’ ‘{print $2}’ awk -F’/’ ‘{print $3}’ sort curl https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE cat googlemapapi.json jq -r grep https:// awk -F’”’ ‘{print $2}’ awk -F’/’ ‘{print $3}’ sort &amp;gt; googlemapdomain.txt cat googlemapapi.js grep “apiLoad([” cut -d ( -f 2 jq -r grep https:// awk -F’”’ ‘{print $2}’ awk -F’/’ ‘{print $3}’ sort -n uniq &amp;gt; googlemapdomainlist.txt curl -X POST https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE grep “apiLoad([” cut -d ( -f 2 jq -r grep https:// awk -F’”’ ‘{print $2}’ awk -F’/’ ‘{print $3}’ sort -n uniq &amp;gt; googlemapdomainlist.txt curl -X POST https://maps.googleapis.com/maps/api/js\?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE grep “apiLoad([” cut -d ( -f 2 sed ‘s/, loadScriptTime);//g’ jq -r grep https:// awk -F’”’ ‘{print $2}’ awk -F’/’ ‘{print $3}’ sort -n uniq &amp;gt; googlemapdomainlist.txt</summary></entry><entry><title type="html">WSL2_GNOME桌面安装配置教程</title><link href="/WSL-2-GNOME-Desktop/" rel="alternate" type="text/html" title="WSL2_GNOME桌面安装配置教程" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/WSL%202%20GNOME%20Desktop</id><content type="html" xml:base="/WSL-2-GNOME-Desktop/">&lt;p&gt;Think Xfce looks dated? Want a conventional Ubuntu experience? This tutorial will guide you through installing Ubuntu’s default desktop environment, GNOME.&lt;/p&gt;
+
+&lt;p&gt;GNOME is one of the more complex — and that means more difficult to run — desktop environments, so &lt;a href=&quot;https://www.reddit.com/r/Windows10/comments/8dnyig/using_a_gui_with_wsl_on_windows_10_ubuntu_wsl/&quot;&gt;for&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/9amqjr/gnome_desktop_using_vcxsrv_cant_make_it_work/&quot;&gt;years&lt;/a&gt; &lt;a href=&quot;https://askubuntu.com/questions/1169695/gnome-under-ubuntu-18-04-for-windows-wont-run&quot;&gt;people&lt;/a&gt; &lt;a href=&quot;https://superuser.com/questions/1559755/gnome-desktop-environment-on-ubuntu-wsl-starting-error&quot;&gt;couldn’t&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/haof3n/cant_run_gnome_in_ubuntu_2004_lts_wsl/&quot;&gt;figure&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/eqwoxy/gnome_and_kde_in_wsl/&quot;&gt;out&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/8dp2yu/gnome_or_kde_on_wsl/&quot;&gt;how&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/hh0q9s/gnomesession_wsl2/&quot;&gt;to&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/b222hp/running_everything_on_gnome/&quot;&gt;run&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/comments/8yfw8z/gnome_on_windows/&quot;&gt;it&lt;/a&gt; on WSL 2. On &lt;a href=&quot;https://github.com/Microsoft/WSL/issues/637&quot;&gt;WSL 1&lt;/a&gt; it could only run using very complicated methods that didn’t transfer to well WSL 2. Any forlorn attempts to run it on WSL 2 only resulted in a smoldering heap of error messages.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;But now you can!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;requirements&quot;&gt;Requirements:&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;WSL 2&lt;/li&gt;
+  &lt;li&gt;Ubuntu 20.04 (other distros not tested)&lt;/li&gt;
+  &lt;li&gt;An X server for Windows, such as &lt;a href=&quot;https://sourceforge.net/projects/vcxsrv/&quot;&gt;VcXsrv&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Basic knowledege on how to run GUI apps with WSL 2 (not required but highly recommended)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;getting-ready&quot;&gt;Getting ready&lt;/h2&gt;
+
+&lt;p&gt;You’ve been regularly updating your distro, haven’t you?&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt update
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Install GNOME: (maybe go eat a snack while it’s installing?)&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;ubuntu-desktop gnome
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Open up your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.bashrc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nano ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And paste this in at the end and save:&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DISPLAY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/resolv.conf | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nameserver | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;:0
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LIBGL_ALWAYS_INDIRECT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you try to start GNOME now, you’ll get a lot of errors. Something along the lines of this, but a ton more errors:&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Unable to init server: Could not connect: Connection refused
+
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gnome-session-check-accelerated:6054&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Gtk-WARNING &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;: 11:04:51.973: cannot open display: :0
+Unable to init server: Could not connect: Connection refused
+
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;gnome-session-check-accelerated:6055&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Gtk-WARNING &lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;: 11:04:52.234: cannot open display: :0
+gnome-session-binary[6044]: WARNING: software acceleration check failed: Child process exited with code 1
+gnome-session-binary[6044]: CRITICAL: We failed, but the fail whale is dead. Sorry....
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The trick is to enable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemd&lt;/code&gt;: (note that this does break a lot of stuff such as Visual Studio Code Remote)&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/DamionGans/ubuntu-wsl2-systemd-script.git
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;ubuntu-wsl2-systemd-script/
+bash ubuntu-wsl2-systemd-script.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now shut down WSL 2: (run this in Windows)&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wsl &lt;span class=&quot;nt&quot;&gt;--shutdown&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;starting-gnome&quot;&gt;Starting GNOME&lt;/h2&gt;
+
+&lt;p&gt;First, fire up your X server on Windows. Make sure you let it through your firewall and disable access control.&lt;/p&gt;
+
+&lt;p&gt;Now, start up Ubuntu again and start GNOME:&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gnome-session
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you don’t get any error messages, you should be good. Wait a few seconds for GNOME to start up.&lt;/p&gt;
+
+&lt;p&gt;&lt;img width=&quot;1007&quot; alt=&quot;desktop&quot; src=&quot;https://user-images.githubusercontent.com/50341827/88995077-68591600-d2af-11ea-91e6-55d528a57dd2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now you have a great GUI desktop and you won’t need any intensive virtual machines anymore!&lt;/p&gt;
+
+&lt;p&gt;Profit?&lt;/p&gt;
+
+&lt;h2 id=&quot;notes&quot;&gt;Notes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The settings app and app store think you are not connected to the internet yet you can &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ping google.com&lt;/code&gt;?&lt;/li&gt;
+  &lt;li&gt;You can disable the screensaver with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gsettings set org.gnome.desktop.session idle-delay 0&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;You can also try KDE Plamsa using a similar method! Just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt install kde-plasma-desktop&lt;/code&gt; instead and start it with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;startplasma-x11&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;/h2&gt;
+
+&lt;p&gt;If you can’t get this to work, try &lt;a href=&quot;https://github.com/QMonkey/wsl-tutorial/blob/master/README.wsl2.md&quot;&gt;Xfce&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you still can’t get it to work, you can ask for help on an online forum such as &lt;a href=&quot;https://www.reddit.com/r/bashonubuntuonwindows/&quot;&gt;r/bashonubuntuonwindows&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><category term="Linux" /><category term="WSL2" /><category term="教程" /><summary type="html">Think Xfce looks dated? Want a conventional Ubuntu experience? This tutorial will guide you through installing Ubuntu’s default desktop environment, GNOME. GNOME is one of the more complex — and that means more difficult to run — desktop environments, so for years people couldn’t figure out how to run it on WSL 2. On WSL 1 it could only run using very complicated methods that didn’t transfer to well WSL 2. Any forlorn attempts to run it on WSL 2 only resulted in a smoldering heap of error messages. But now you can! Requirements: WSL 2 Ubuntu 20.04 (other distros not tested) An X server for Windows, such as VcXsrv Basic knowledege on how to run GUI apps with WSL 2 (not required but highly recommended) Getting ready You’ve been regularly updating your distro, haven’t you? sudo apt update sudo apt upgrade Install GNOME: (maybe go eat a snack while it’s installing?) sudo apt install ubuntu-desktop gnome Open up your ~/.bashrc: nano ~/.bashrc And paste this in at the end and save: export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0 export LIBGL_ALWAYS_INDIRECT=1 If you try to start GNOME now, you’ll get a lot of errors. Something along the lines of this, but a ton more errors: Unable to init server: Could not connect: Connection refused (gnome-session-check-accelerated:6054): Gtk-WARNING **: 11:04:51.973: cannot open display: :0 Unable to init server: Could not connect: Connection refused (gnome-session-check-accelerated:6055): Gtk-WARNING **: 11:04:52.234: cannot open display: :0 gnome-session-binary[6044]: WARNING: software acceleration check failed: Child process exited with code 1 gnome-session-binary[6044]: CRITICAL: We failed, but the fail whale is dead. Sorry.... The trick is to enable systemd: (note that this does break a lot of stuff such as Visual Studio Code Remote) git clone https://github.com/DamionGans/ubuntu-wsl2-systemd-script.git cd ubuntu-wsl2-systemd-script/ bash ubuntu-wsl2-systemd-script.sh Now shut down WSL 2: (run this in Windows) wsl --shutdown Starting GNOME First, fire up your X server on Windows. Make sure you let it through your firewall and disable access control. Now, start up Ubuntu again and start GNOME: gnome-session If you don’t get any error messages, you should be good. Wait a few seconds for GNOME to start up. Now you have a great GUI desktop and you won’t need any intensive virtual machines anymore! Profit? Notes The settings app and app store think you are not connected to the internet yet you can ping google.com? You can disable the screensaver with gsettings set org.gnome.desktop.session idle-delay 0. You can also try KDE Plamsa using a similar method! Just sudo apt install kde-plasma-desktop instead and start it with startplasma-x11. Troubleshooting If you can’t get this to work, try Xfce. If you still can’t get it to work, you can ask for help on an online forum such as r/bashonubuntuonwindows.</summary></entry><entry><title type="html">学习笔记 - git常用命令大全</title><link href="/gitlearning/" rel="alternate" type="text/html" title="学习笔记 - git常用命令大全" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/gitlearning</id><content type="html" xml:base="/gitlearning/">&lt;h2 id=&quot;本地仓库&quot;&gt;本地仓库&lt;/h2&gt;
+
+&lt;p&gt;第一步git设置&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.name &lt;span class=&quot;s2&quot;&gt;&quot;your name&quot;&lt;/span&gt;
+git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.email &lt;span class=&quot;s2&quot;&gt;&quot;yourmail@example.com&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;第二步：初始化仓库&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;添加文件:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add filename1.txt			从工作区到暂存区&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;stage&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;added filename1.txt&quot;&lt;/span&gt;   从暂存区到分支
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;查看状态&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;查看日志&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log		历史日志
+git log &lt;span class=&quot;nt&quot;&gt;--graph&lt;/span&gt; 查看分支合并图
+git log &lt;span class=&quot;nt&quot;&gt;--pretty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;oneline	每个commit单行显示
+git reflog	未来日志
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;回退版本&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reset &lt;span class=&quot;nt&quot;&gt;--hard&lt;/span&gt; HEAD^	&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HEAD^ 上一版本，其他-commit_ID&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;撤销修改&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; filename1.txt 测销工作区的修改
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;删除文件&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git &lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;filename1.txt
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;版本库里有，工作区删除掉了，可用git checkout &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; filename1.txt恢复&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;链接远程库&quot;&gt;链接远程库&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;step1. 密钥&lt;/li&gt;
+  &lt;li&gt;step2. 关联远程仓库
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git remote add origin git@github.com:hansyao/myrepository.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;step3. 提交到远程仓库
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git push &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; origin master   &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt;参数：和远程分支关联&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+git push origin &lt;span class=&quot;nt&quot;&gt;--delete&lt;/span&gt; &amp;lt;branchName&amp;gt; 删除远程分支
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;从远程库克隆到本地库&lt;/p&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone git@github.com:hansyao/myrepository.git		&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;https协议较慢，最好这样用ssh协议&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;h2 id=&quot;创建合并分支&quot;&gt;创建合并分支&lt;/h2&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch  查看分支
+git branch name	创建分支
+git checkout name 切换分支
+git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; name 创建+切换分支
+git merge name 合并name到当前分支
+git branch &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; name 删除分支
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;h2 id=&quot;bug分支&quot;&gt;bug分支&lt;/h2&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git stash 储藏当前工作区
+git stash list
+git stash apply 恢复stash工作区
+git stash apply stash@&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+git stash drop 删除stash工作区
+git stash pop 恢复的同时删除stash工作区
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;多人协作&quot;&gt;多人协作&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git remote  查看远程分支
+git remote &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; 查看远程分支详细信息
+git push origin master 合并到远程master分支
+git push origin dev 合并到远程dev分支
+git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; dev origin/dev  创建本地dev分支并与远程dev链接，同时切换到本地dev分支
+git pull 远程同步到本地仓库
+git branch &lt;span class=&quot;nt&quot;&gt;--set-upsteam&lt;/span&gt; dev origin/dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;step1. git push orgin branch-name 推送自己的修改&lt;/li&gt;
+  &lt;li&gt;step2. 如果推送失败,先用git pull试图合并&lt;/li&gt;
+  &lt;li&gt;step3. 如果合并有冲突, 则解决冲突，并在本地提交&lt;/li&gt;
+  &lt;li&gt;step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送
+如果”no tracking information”, 需要建立本地和远程分支的链接 “git branch –set-upsteam dev origin/dev”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;创建标签&quot;&gt;创建标签&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git tag 查看所有标签
+git tag v0.1 打名为v0.1的标签
+git tag v0.1 commit_ID
+git show v0.1 查看标签详细信息
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;忽略特殊文件&quot;&gt;忽略特殊文件&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.gitignore
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="Git" /><category term="教程" /><summary type="html">本地仓库 第一步git设置 git config --global user.name &quot;your name&quot; git config --global user.email &quot;yourmail@example.com&quot; 第二步：初始化仓库 git init 添加文件: git add filename1.txt 从工作区到暂存区(stage) git commit -m &quot;added filename1.txt&quot; 从暂存区到分支 查看状态 git status 查看日志 git log 历史日志 git log --graph 查看分支合并图 git log --pretty=oneline 每个commit单行显示 git reflog 未来日志 回退版本 git reset --hard HEAD^ (HEAD^ 上一版本，其他-commit_ID) 撤销修改 git checkout -- filename1.txt 测销工作区的修改 删除文件 git rm filename1.txt (版本库里有，工作区删除掉了，可用git checkout -- filename1.txt恢复) 链接远程库 step1. 密钥 step2. 关联远程仓库 git remote add origin git@github.com:hansyao/myrepository.git step3. 提交到远程仓库 git push -u origin master (-u参数：和远程分支关联) git push origin --delete &amp;lt;branchName&amp;gt; 删除远程分支 从远程库克隆到本地库 git clone git@github.com:hansyao/myrepository.git (https协议较慢，最好这样用ssh协议) 创建合并分支 git branch 查看分支 git branch name 创建分支 git checkout name 切换分支 git checkout -b name 创建+切换分支 git merge name 合并name到当前分支 git branch -d name 删除分支 bug分支 git stash 储藏当前工作区 git stash list git stash apply 恢复stash工作区 git stash apply stash@{0} git stash drop 删除stash工作区 git stash pop 恢复的同时删除stash工作区 多人协作 git remote 查看远程分支 git remote -v 查看远程分支详细信息 git push origin master 合并到远程master分支 git push origin dev 合并到远程dev分支 git checkout -b dev origin/dev 创建本地dev分支并与远程dev链接，同时切换到本地dev分支 git pull 远程同步到本地仓库 git branch --set-upsteam dev origin/dev step1. git push orgin branch-name 推送自己的修改 step2. 如果推送失败,先用git pull试图合并 step3. 如果合并有冲突, 则解决冲突，并在本地提交 step4. 没有冲突或者解决掉冲突后，再用git push origin branch-name 推送 如果”no tracking information”, 需要建立本地和远程分支的链接 “git branch –set-upsteam dev origin/dev” 创建标签 git tag 查看所有标签 git tag v0.1 打名为v0.1的标签 git tag v0.1 commit_ID git show v0.1 查看标签详细信息 忽略特殊文件 .gitignore</summary></entry><entry><title type="html">学习笔记 - kernel 学习环境搭建</title><link href="/kernel_environment/" rel="alternate" type="text/html" title="学习笔记 - kernel 学习环境搭建" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/kernel_environment</id><content type="html" xml:base="/kernel_environment/">&lt;h2 id=&quot;1-buildinstall-upstream-kernel-as-host&quot;&gt;1. Build/install upstream kernel as host&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# mkdir -p ~/sandbox/&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux.host&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cd linux.host&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cp /boot/config-5.4.70-amd64-desktop ./.config&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git checkout -b debug&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make olddefconfig&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make dep-pkg -j7&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cd ..&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# sudo dpkg -i *.deb&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# sudo reboot&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;2-build-buildroot&quot;&gt;2. Build buildroot&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# cd ~/sandbox&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git clone https://github.com/buildroot/buildroot buildroot&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cd buildroot&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make menuconfig&lt;/span&gt;
+ Target optins -&amp;gt; x86_64
+ Filesystem images -&amp;gt; cpio the root filesystem image
+                      Compression method &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;xz&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make -j&lt;/span&gt;
+&amp;lt;../output/images/rootfs.cpio.xz is the output root filesystem image&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;3-build-guest-kernel&quot;&gt;3. Build guest kernel&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# cd ~/sandbox&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux.guest&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cd linux.guest&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git checkout -b debug&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cp &amp;lt;attached_guest_config_file&amp;gt; .config&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make -j&lt;/span&gt;
+&amp;lt;../arch/x86/boot/bzImage is the kernel image to be used later&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;4-build-qemu&quot;&gt;4. Build QEMU&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# cd ~/sandbox&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# git clone https://git.qemu.org/git/qemu.git qemu&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# cd qemu&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# ./configure --target-list=x86_64-softmmu --enable-debug \&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;--enable-werror&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--disable-fdt&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--enable-kvm&lt;/span&gt;  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;--disable-xen&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--disable-vnc&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# make -j&lt;/span&gt;
+&amp;lt;~/sandbox/qemu.main/build/aarch64-softmmu/qemu-system-x86 is the output binary&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;5-boot-guest-kernel&quot;&gt;5. Boot guest kernel&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   &lt;span class=&quot;c&quot;&gt;# mkdir ~/sandbox/images&lt;/span&gt;
+   &lt;span class=&quot;c&quot;&gt;# ~/sandbox/qemu/build/qemu-img create -f qcow2 ~/sandbox/images/vm.img 1G&lt;/span&gt;
+   &lt;span class=&quot;c&quot;&gt;# ~/sandbox/qemu/build/qemu-img create -f qcow2 ~/sandbox/images/vm1.img 1G&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;6-start-vm-machine---to-create-a-shell-script-start_vm_x86sh&quot;&gt;6. start VM machine - to create a shell script [start_vm_x86.sh]&lt;/h2&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;start_vm_x86&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt; ~/sandbox/qemu/build/x86_64-softmmu/qemu-system-x86_64 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--enable-kvm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-machine&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;q35,accel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;kvm,kernel-irqchip&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;on &lt;span class=&quot;nt&quot;&gt;-cpu&lt;/span&gt; host    &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-smp&lt;/span&gt; 2 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; 1G &lt;span class=&quot;nt&quot;&gt;-monitor&lt;/span&gt; none &lt;span class=&quot;nt&quot;&gt;-nographic&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt;                                &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-serial&lt;/span&gt; mon:stdio                                                       &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-kernel&lt;/span&gt; ~/sandbox/linux.guest/arch/x86/boot/bzImage                      &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-initrd&lt;/span&gt; ~/sandbox/buildroot/output/images/rootfs.cpio.xz                &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-append&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;earlyprintk=ttyS0 console=ttyS0 debug swapaccount=1&quot;&lt;/span&gt;           &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-device&lt;/span&gt; virtio-net-pci,netdev&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;unet,mac&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;52:54:00:f1:26:a6                &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-netdev&lt;/span&gt; user,id&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;unet,hostfwd&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tcp::50959-:22                             &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-drive&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/sandbox/images/vm.img,if&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;none,format&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;raw,id&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nvme0         &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-device&lt;/span&gt; nvme,drive&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nvme0,serial&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;foo                                     &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-drive&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/sandbox/images/vm1.img,if&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;none,format&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;raw,id&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nvme1        &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;-device&lt;/span&gt; nvme,drive&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;nvme1,serial&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;foo1
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+start_vm_x86
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="Linux" /><category term="Kernel" /><category term="教程" /><summary type="html">1. Build/install upstream kernel as host # mkdir -p ~/sandbox/ # git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux.host # cd linux.host # cp /boot/config-5.4.70-amd64-desktop ./.config # git checkout -b debug # make olddefconfig # make dep-pkg -j7 # cd .. # sudo dpkg -i *.deb # sudo reboot 2. Build buildroot # cd ~/sandbox # git clone https://github.com/buildroot/buildroot buildroot # cd buildroot # make menuconfig Target optins -&amp;gt; x86_64 Filesystem images -&amp;gt; cpio the root filesystem image Compression method (xz) # make -j &amp;lt;../output/images/rootfs.cpio.xz is the output root filesystem image&amp;gt; 3. Build guest kernel # cd ~/sandbox # git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux.guest # cd linux.guest # git checkout -b debug # cp &amp;lt;attached_guest_config_file&amp;gt; .config # make -j &amp;lt;../arch/x86/boot/bzImage is the kernel image to be used later&amp;gt; 4. Build QEMU # cd ~/sandbox # git clone https://git.qemu.org/git/qemu.git qemu # cd qemu # ./configure --target-list=x86_64-softmmu --enable-debug \ --enable-werror --disable-fdt --enable-kvm \ --disable-xen --disable-vnc # make -j &amp;lt;~/sandbox/qemu.main/build/aarch64-softmmu/qemu-system-x86 is the output binary&amp;gt; 5. Boot guest kernel # mkdir ~/sandbox/images # ~/sandbox/qemu/build/qemu-img create -f qcow2 ~/sandbox/images/vm.img 1G # ~/sandbox/qemu/build/qemu-img create -f qcow2 ~/sandbox/images/vm1.img 1G 6. start VM machine - to create a shell script [start_vm_x86.sh] start_vm_x86() { sudo ~/sandbox/qemu/build/x86_64-softmmu/qemu-system-x86_64 \ --enable-kvm -machine type=q35,accel=kvm,kernel-irqchip=on -cpu host \ -smp 2 -m 1G -monitor none -nographic -s \ -serial mon:stdio \ -kernel ~/sandbox/linux.guest/arch/x86/boot/bzImage \ -initrd ~/sandbox/buildroot/output/images/rootfs.cpio.xz \ -append &quot;earlyprintk=ttyS0 console=ttyS0 debug swapaccount=1&quot; \ -device virtio-net-pci,netdev=unet,mac=52:54:00:f1:26:a6 \ -netdev user,id=unet,hostfwd=tcp::50959-:22 \ -drive file=~/sandbox/images/vm.img,if=none,format=raw,id=nvme0 \ -device nvme,drive=nvme0,serial=foo \ -drive file=~/sandbox/images/vm1.img,if=none,format=raw,id=nvme1 \ -device nvme,drive=nvme1,serial=foo1 } start_vm_x86</summary></entry><entry><title type="html">WSL2-安装任意Linux发行版教程</title><link href="/wsl-install_another_distro/" rel="alternate" type="text/html" title="WSL2-安装任意Linux发行版教程" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/wsl-install_another_distro</id><content type="html" xml:base="/wsl-install_another_distro/">&lt;ol&gt;
+  &lt;li&gt;Here are some default vars for the process
+```bash
+ISO_DIR=~/fedora;
+ROOTFS_MOUNT_DIR=/mnt/contents&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;DISTRO_LOCATION=&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+1. Install Ubuntu Bash
+
+2. Install 7zip in ubuntu
+```bash
+sudo apt-get install p7zip 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Download the distro of your choice (i.e Fedora)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Move the ISO to its own folder, i.e &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/fedora&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Navigate to the directory and Extract using 7Zip
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ISO_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ISO_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+7z x Fedora-Cinnamon-Live-x86_64-31-1.9.iso
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;em&gt;You should see the following files or similar&lt;/em&gt;&lt;/p&gt;
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;artman41@DESKTOP-TQGCI07:~/fedora$ ll | less
+total 2139660
+drwxr-xr-x  7 artman41 artman41       4096 Mar 31 16:04 ./
+drwxr-xr-x 10 artman41 artman41       4096 Mar 31 16:03 ../
+drwx------  3 artman41 artman41       4096 Oct 24 00:15 EFI/
+-rwxr-xr-x  1 artman41 artman41 2203779072 Mar 31 16:03 Fedora-Cinnamon-Live-x86_64-31-1.9.iso*
+drwx------  2 artman41 artman41       4096 Oct 24 00:15 LiveOS/
+drwx------  2 artman41 artman41       4096 Mar 31 16:04 [BOOT]/
+drwx------  3 artman41 artman41       4096 Oct 24 00:15 images/
+drwx------  2 artman41 artman41       4096 Oct 24 00:15 isolinux/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Navigate to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LiveOS&lt;/code&gt; (or where the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;squashfs&lt;/code&gt; is) and ‘unsquash’ the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;squash.img&lt;/code&gt;:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;LiveOS&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unsquashfs &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; squashfs squashfs.img
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Navigate to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;squashfs/LiveOS&lt;/code&gt; and mount the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rootfs.img&lt;/code&gt;:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo mkdir&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ROOTFS_MOUNT_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; loop squashfs/LiveOS/rootfs.img &lt;span class=&quot;nv&quot;&gt;$ROOTFS_MOUNT_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Navigate to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ROOTFS_MOUNT_DIR&lt;/code&gt; and tar.gz the files:
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ROOTFS_MOUNT_DIR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo tar&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-zcvf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ISO_DIR&lt;/span&gt;/distro.tar.gz &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Navigate to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ISO_DIR&lt;/code&gt; and import the .tar.gz using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wsl&lt;/code&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ISO_DIR&lt;/span&gt;
+wsl.exe &lt;span class=&quot;nt&quot;&gt;--import&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$DISTRO_NAME&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$DISTRO_LOCATION&lt;/span&gt; distro.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Open your distro and create a user
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wsl.exe &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$DISTRO_NAME&lt;/span&gt;
+useradd &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;logging-in-to-your-account-by-default&quot;&gt;Logging in to your account by default&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;Note: Don’t forget to add yourself to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;visudo&lt;/code&gt; or you’ll be unable to perform super-user actions until you set the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DefaultUser&lt;/code&gt; field in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;regedit&lt;/code&gt; to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Get your uid
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt; /etc/passwd
+&lt;span class=&quot;c&quot;&gt;# The return will be something like artman41:x:1000:1000:root:/root:/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#  where the format is $USER:x:$USER_ID:$GROUP_ID:$GROUP:$HOME:$SHELL&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Install &lt;a href=&quot;https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701&quot;&gt;Windows Terminal&lt;/a&gt; and Open the JSON Settings
+    &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#in powershell&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notepad.exe&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;LocalAppData&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Look for the profile with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$DISTRO_NAME&lt;/code&gt; and note the GUID (referred to as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$DISTRO_GUID&lt;/code&gt; in the guide)
+    &lt;ul&gt;
+      &lt;li&gt;&lt;em&gt;copying the GUID to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;defaultProfile&lt;/code&gt; will make you load in to your custom distro by default using the windows terminal&lt;/em&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;regedit&lt;/code&gt; and navigate to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss\$DISTRO_GUID&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Ensure the following values are set&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Type&lt;/th&gt;
+      &lt;th&gt;Data&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DefaultEnvironment&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;REG_MULTI_SZ&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HOSTTYPE=x86_64&lt;/code&gt;&lt;br /&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LANG=en_US.UTF-8&lt;/code&gt;&lt;br /&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games&lt;/code&gt;&lt;br /&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TERM=xterm-256color&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DefaultUid&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;REG_DWORD&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$USER_ID&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Restart your custom distro shell&lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><category term="Linux" /><category term="WSL2" /><category term="教程" /><summary type="html">Here are some default vars for the process ```bash ISO_DIR=~/fedora; ROOTFS_MOUNT_DIR=/mnt/contents DISTRO_LOCATION= 1. Install Ubuntu Bash 2. Install 7zip in ubuntu ```bash sudo apt-get install p7zip Download the distro of your choice (i.e Fedora) Move the ISO to its own folder, i.e ~/fedora Navigate to the directory and Extract using 7Zip mkdir $ISO_DIR; cd $ISO_DIR; 7z x Fedora-Cinnamon-Live-x86_64-31-1.9.iso You should see the following files or similar artman41@DESKTOP-TQGCI07:~/fedora$ ll | less total 2139660 drwxr-xr-x 7 artman41 artman41 4096 Mar 31 16:04 ./ drwxr-xr-x 10 artman41 artman41 4096 Mar 31 16:03 ../ drwx------ 3 artman41 artman41 4096 Oct 24 00:15 EFI/ -rwxr-xr-x 1 artman41 artman41 2203779072 Mar 31 16:03 Fedora-Cinnamon-Live-x86_64-31-1.9.iso* drwx------ 2 artman41 artman41 4096 Oct 24 00:15 LiveOS/ drwx------ 2 artman41 artman41 4096 Mar 31 16:04 [BOOT]/ drwx------ 3 artman41 artman41 4096 Oct 24 00:15 images/ drwx------ 2 artman41 artman41 4096 Oct 24 00:15 isolinux/ Navigate to LiveOS (or where the squashfs is) and ‘unsquash’ the squash.img: cd LiveOS; sudo unsquashfs -d squashfs squashfs.img Navigate to squashfs/LiveOS and mount the rootfs.img: sudo mkdir $ROOTFS_MOUNT_DIR; sudo mount -o loop squashfs/LiveOS/rootfs.img $ROOTFS_MOUNT_DIR; Navigate to $ROOTFS_MOUNT_DIR and tar.gz the files: cd $ROOTFS_MOUNT_DIR; sudo tar -zcvf $ISO_DIR/distro.tar.gz . Navigate to $ISO_DIR and import the .tar.gz using wsl cd $ISO_DIR wsl.exe --import $DISTRO_NAME $DISTRO_LOCATION distro.tar.gz Open your distro and create a user wsl.exe -d $DISTRO_NAME useradd -m $USER Logging in to your account by default Note: Don’t forget to add yourself to visudo or you’ll be unable to perform super-user actions until you set the DefaultUser field in regedit to 0 Get your uid grep $USER /etc/passwd # The return will be something like artman41:x:1000:1000:root:/root:/bin/bash # where the format is $USER:x:$USER_ID:$GROUP_ID:$GROUP:$HOME:$SHELL Install Windows Terminal and Open the JSON Settings #in powershell notepad.exe $env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\profiles.json Look for the profile with $DISTRO_NAME and note the GUID (referred to as $DISTRO_GUID in the guide) copying the GUID to defaultProfile will make you load in to your custom distro by default using the windows terminal Open regedit and navigate to Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss\$DISTRO_GUID Ensure the following values are set Name Type Data DefaultEnvironment REG_MULTI_SZ HOSTTYPE=x86_64LANG=en_US.UTF-8PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/gamesTERM=xterm-256color DefaultUid REG_DWORD $USER_ID Restart your custom distro shell</summary></entry><entry><title type="html">WSL2系统迁移</title><link href="/wsl2_change_folder/" rel="alternate" type="text/html" title="WSL2系统迁移" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/wsl2_change_folder</id><content type="html" xml:base="/wsl2_change_folder/">&lt;ol&gt;
+  &lt;li&gt;查看已安装的linux发行版本
+wsl -l –all -v&lt;/li&gt;
+  &lt;li&gt;导出分发版为tar文件到d盘
+wsl –export Ubuntu-20.04 d:\wsl-ubuntu20.04.tar&lt;/li&gt;
+  &lt;li&gt;注销当前分发版
+wsl –unregister Ubuntu-20.04&lt;/li&gt;
+  &lt;li&gt;重新导入并安装WSL在D盘
+wsl –import Ubuntu-20.04 d:\wsl-ubuntu20.04 d:\wsl-ubuntu20.04.tar –version 2&lt;/li&gt;
+  &lt;li&gt;设置默认登陆用户为安装时用户名
+ubuntu2004 config –default-user USERNAME&lt;/li&gt;
+  &lt;li&gt;删除wsl-ubuntu20.04.tar
+del d:\wsl-ubuntu20.04.tar&lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><category term="Linux" /><category term="WSL2" /><category term="教程" /><summary type="html">查看已安装的linux发行版本 wsl -l –all -v 导出分发版为tar文件到d盘 wsl –export Ubuntu-20.04 d:\wsl-ubuntu20.04.tar 注销当前分发版 wsl –unregister Ubuntu-20.04 重新导入并安装WSL在D盘 wsl –import Ubuntu-20.04 d:\wsl-ubuntu20.04 d:\wsl-ubuntu20.04.tar –version 2 设置默认登陆用户为安装时用户名 ubuntu2004 config –default-user USERNAME 删除wsl-ubuntu20.04.tar del d:\wsl-ubuntu20.04.tar</summary></entry><entry><title type="html">BUILD YOUR KERNEL FOR WSL2</title><link href="/wsl2_kernel_rebuilt/" rel="alternate" type="text/html" title="BUILD YOUR KERNEL FOR WSL2" /><published>2021-05-20T00:00:00+08:00</published><updated>2021-05-20T00:00:00+08:00</updated><id>/wsl2_kernel_rebuilt</id><content type="html" xml:base="/wsl2_kernel_rebuilt/">&lt;p&gt;Windows 10 2004 will be released to public very soon. It has been released in Windows Insider Program for a long time. In this release, the biggest improvement to me is WSL2. In WSL2, windows actually hosted a virtual machine, and WSL is actually running inside the virtual machine. That means you can run a real linux kernel and even you can build your kernel and run it. It’s very convenient for study Linux kernel. You can very easily switch kernels.&lt;/p&gt;
+
+&lt;p&gt;Build linux kernel is actually very easy, you just need a Linux environment. Yes, you can also build a kernel in side WSL. In this article, I’ll use Ubuntu which is the one of the most popular Linux distribution. You need install the following packages:&lt;/p&gt;
+
+&lt;p&gt;sudo apt install g++ make flex bison libssl-dev libelf-dev bc
+Then you can download a copy of Linux kernel source code from https://www.kernel.org. Currently, the official Microsoft WSL release uses 4.19.x. But I always like try new things, so let’s download 5.5.9.&lt;/p&gt;
+
+&lt;p&gt;Use the following command to extract the kernel source code:&lt;/p&gt;
+
+&lt;p&gt;tar xvf linux-5.5.9.tar.xz
+cd linux-5.5.9
+Now, you need a configure file. The config file saves the kernel options. Lot all of the kernel features are supported by Windows. And some kernel features are used for kernel developer debug only. So you need the config file to turn off those features. I think the best way to get the config file is copying from Microsoft WSL repository. Microsoft WSL team has turned off those options for you already. You can download from https://github.com/microsoft/WSL2-Linux-Kernel/blob/master/Microsoft/config-wsl.&lt;/p&gt;
+
+&lt;p&gt;Create a folder Microsoft under linux-5.5.9, and copy the put the config file in. Then you can build the kernel now:&lt;/p&gt;
+
+&lt;p&gt;make KCONFIG_CONFIG=Microsoft/config-wsl
+If you use linux 4.19.x, I believe you won’t hit any issue. But if you use linux 5.5.9 like me, you will be ask for some questions also. This is because the config file you download is for 4.19.x, in 5.5.9, there are a lot of new options added. So you need answer “Yes” or “No” to enable or disable these new options. You can answer “No” for all questions, or you can download the config file from my repository: https://github.com/xieyubo/WSL2-Linux-Kernel/blob/wsl-xyb-port-5.5.y/Microsoft/config-wsl. I’ve answered those questions for you already.&lt;/p&gt;
+
+&lt;p&gt;After build finish, you can copy the kernel to a windows folder. The name of the kernel file under build folder is bzImage, we rename it to kernel which is used in WSL2:&lt;/p&gt;
+
+&lt;p&gt;cp arch/x86_64/boot/bzImage /mnt/c/temp/kernel
+Now our kernel is ready to use. But before we using it, please make sure you are enable WSL2 and switch your existed WSL instances from WSL1 to WSL2. You can follow the instructions on http://aka.ms/wsl2.&lt;/p&gt;
+
+&lt;p&gt;OK, let’s open a Windows cmd window and shutdown WSL2 virtual machine:&lt;/p&gt;
+
+&lt;p&gt;wsl –shutdown
+Goto C:\Windows\System32\lxss\tools[^1] folder, use the new kernel file to replace the old one. Re-launch your WSL instance, type:&lt;/p&gt;
+
+&lt;p&gt;uname -r
+You should see the kernel version is 5.5.9 now.&lt;/p&gt;
+
+&lt;p&gt;Update on 2020-04-01&lt;/p&gt;
+
+&lt;p&gt;Instead of replacing the original kernel file, you can also use global wsl2 configuration file. You can create a .wslconfig file under %UserProfile%, and put the following content:&lt;/p&gt;
+
+&lt;p&gt;[wsl2]
+kernel=c:\tmp\kernel
+You must use absolute windows path and with escaped backslashes. So you can not use \ in the path, must use \. There are some other configurations you can specify, please check https://github.com/MicrosoftDocs/WSL/blob/live/WSL/release-notes.md, search .wslconfig.&lt;/p&gt;
+
+&lt;p&gt;Some people might be confused: why the original kernel file is around 50 MB, but the new one is just around 9 MB? Do you remember the original name of the new kernel file is bzImage? bzImage is actually a kind of compressed file format. It compresses the real kernel file (vmlinux which is around 50 MB), and adds code which can decompress the real kernel at runtime. The following picture comes from https://en.wikipedia.org/wiki/Vmlinux explain the relation ship between vmlinux and bzImage very clear:&lt;/p&gt;</content><author><name></name></author><category term="Linux" /><category term="Kernel" /><category term="教程" /><summary type="html">Windows 10 2004 will be released to public very soon. It has been released in Windows Insider Program for a long time. In this release, the biggest improvement to me is WSL2. In WSL2, windows actually hosted a virtual machine, and WSL is actually running inside the virtual machine. That means you can run a real linux kernel and even you can build your kernel and run it. It’s very convenient for study Linux kernel. You can very easily switch kernels. Build linux kernel is actually very easy, you just need a Linux environment. Yes, you can also build a kernel in side WSL. In this article, I’ll use Ubuntu which is the one of the most popular Linux distribution. You need install the following packages: sudo apt install g++ make flex bison libssl-dev libelf-dev bc Then you can download a copy of Linux kernel source code from https://www.kernel.org. Currently, the official Microsoft WSL release uses 4.19.x. But I always like try new things, so let’s download 5.5.9. Use the following command to extract the kernel source code: tar xvf linux-5.5.9.tar.xz cd linux-5.5.9 Now, you need a configure file. The config file saves the kernel options. Lot all of the kernel features are supported by Windows. And some kernel features are used for kernel developer debug only. So you need the config file to turn off those features. I think the best way to get the config file is copying from Microsoft WSL repository. Microsoft WSL team has turned off those options for you already. You can download from https://github.com/microsoft/WSL2-Linux-Kernel/blob/master/Microsoft/config-wsl. Create a folder Microsoft under linux-5.5.9, and copy the put the config file in. Then you can build the kernel now: make KCONFIG_CONFIG=Microsoft/config-wsl If you use linux 4.19.x, I believe you won’t hit any issue. But if you use linux 5.5.9 like me, you will be ask for some questions also. This is because the config file you download is for 4.19.x, in 5.5.9, there are a lot of new options added. So you need answer “Yes” or “No” to enable or disable these new options. You can answer “No” for all questions, or you can download the config file from my repository: https://github.com/xieyubo/WSL2-Linux-Kernel/blob/wsl-xyb-port-5.5.y/Microsoft/config-wsl. I’ve answered those questions for you already. After build finish, you can copy the kernel to a windows folder. The name of the kernel file under build folder is bzImage, we rename it to kernel which is used in WSL2: cp arch/x86_64/boot/bzImage /mnt/c/temp/kernel Now our kernel is ready to use. But before we using it, please make sure you are enable WSL2 and switch your existed WSL instances from WSL1 to WSL2. You can follow the instructions on http://aka.ms/wsl2. OK, let’s open a Windows cmd window and shutdown WSL2 virtual machine: wsl –shutdown Goto C:\Windows\System32\lxss\tools[^1] folder, use the new kernel file to replace the old one. Re-launch your WSL instance, type: uname -r You should see the kernel version is 5.5.9 now. Update on 2020-04-01 Instead of replacing the original kernel file, you can also use global wsl2 configuration file. You can create a .wslconfig file under %UserProfile%, and put the following content: [wsl2] kernel=c:\tmp\kernel You must use absolute windows path and with escaped backslashes. So you can not use \ in the path, must use \. There are some other configurations you can specify, please check https://github.com/MicrosoftDocs/WSL/blob/live/WSL/release-notes.md, search .wslconfig. Some people might be confused: why the original kernel file is around 50 MB, but the new one is just around 9 MB? Do you remember the original name of the new kernel file is bzImage? bzImage is actually a kind of compressed file format. It compresses the real kernel file (vmlinux which is around 50 MB), and adds code which can decompress the real kernel at runtime. The following picture comes from https://en.wikipedia.org/wiki/Vmlinux explain the relation ship between vmlinux and bzImage very clear:</summary></entry></feed>
