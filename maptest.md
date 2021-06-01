@@ -15,7 +15,8 @@ permalink: /contact/
   action="https://v1.oneplus-solution.com/macros/s/AKfycbzEWUMIp7dxXScbNeP3nuqmrwja_7tVDctVkCmB/exec">
   <!-- change the form action to your script url -->
 
-<br>
+  <br>
+
   <div class="form-elements">
     <h3>你的大名:</h3>
     <input type="text" name="name" class="form-control" id="name" placeholder="你的大名..." />
