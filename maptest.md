@@ -28,7 +28,5 @@ permalink: /contact/
     <button type="submit" class="glyphicon glyphicon-envelope  submit btn-gradient red">&nbsp;Send</button>
   </div>  
   <!-- Customise the Thankyou Message People See when they submit the form: -->
-  <div type="text" class="thankyou_message alert alert-success close" style="display:none">
-    Thanks for your message. I will contact you soon!
-  </div>
+  <div type="text" class="thankyou_message alert alert-success close" style="display:none">Thanks for your message. I will contact you soon!</div>
 </form>
