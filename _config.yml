@@ -41,7 +41,7 @@ navigation:
   - name: 标签
     url: /tags
   - name: 联系方式
-    url: /Contact
+    url: /contact
 
 # 每页的文章数
 paginate: 8
