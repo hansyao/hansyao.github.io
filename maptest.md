@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 联系方式
-permalink: /Contact/
+permalink: /contact/
 ---
 
 <script src="https://v1.oneplus-solution.com/maps/api/js?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&callback=initMap" async></script>
