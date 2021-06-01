@@ -7,8 +7,8 @@
 # 井号后面的文字是说明文档，不会被程序读取。
 
 # 描述/签名
-name: Hans Yao's Personal Blog
-description: 老姚的博客
+name: 老姚的博客
+description: 本文所有博文除了特别注明外皆为原创，转载请注明来源。
 
 # 输入你的网站域名（如果你没有添加自己的域名，而是直接用GitHub pages分配的域名的话可以省略）
 url: 
@@ -41,9 +41,7 @@ navigation:
   - name: 标签
     url: /tags
   - name: 联系方式
-    url: /map
-  - name: 联系方式2
-    url: /map2
+    url: /Contact
 
 # 每页的文章数
 paginate: 8

@@ -1,0 +1,45 @@
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<!-- <script src="https://unpkg.com/feather-icons"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+
+<!--* MathJax公式渲染支持 *-->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      inlineMath: [['$','$']]
+    }
+  });
+</script>
+
+
+<!--谷歌地图支持-->>
+<script>
+  var map;
+  
+  function initMap() {
+    const myLatLng = {
+      lat: 31.132193301555073,
+      lng: 121.57718055197236,
+    };
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 15,
+      center: myLatLng,
+    });
+    new google.maps.Marker({
+      position: myLatLng,
+      map,
+      icon: 'https://cdn.jsdelivr.net/gh/hansyao/image-hosting@master/20210520/image.40nrz6phtdg0.png',
+      title: "Hans Yao",
+    })
+  }
+</script>
+
+<!-- google map API call back-->
+
+<!-- send mail for googlesheets -->
+<script type="text/javascript" src="/assets/js/form-submission-handler.js"></script>
+

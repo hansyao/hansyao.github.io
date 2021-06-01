@@ -3,6 +3,7 @@
 
   {% include meta.html %}
   {% include fonts.html %}
+  {% include script.html %}
 
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -12,35 +13,4 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}"
     href="{{ site.baseurl }}/feed.xml" />
   <link rel="shortcut icon" href="{{ site.favicon }}">
-  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-  <!-- <script src="https://unpkg.com/feather-icons"></script> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
-  <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
-
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-        inlineMath: [['$','$']]
-      }
-    });
-  </script>
-
-  <script>
-    let map;
-
-    function initMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: {
-          lat: -34.397,
-          lng: 150.644
-        },
-        zoom: 8,
-      });
-    }
-  </script>
-  <script src="https://v1.oneplus-solution.com/maps/api/js?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&callback=initMap" async></script>
-  <script type="text/javascript" src="/assets/js/form-submission-handler.js"></script>
 </head>
