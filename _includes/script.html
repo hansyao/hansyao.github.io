@@ -1,3 +1,5 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <!-- <script src="https://unpkg.com/feather-icons"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
@@ -18,7 +20,7 @@
 <!--谷歌地图支持-->
 <script>
   var map;
-  
+
   function initMap() {
     const myLatLng = {
       lat: 31.132193301555073,
@@ -42,3 +44,17 @@
 <!-- send mail for googlesheets -->
 <script type="text/javascript" src="/assets/js/form-submission-handler.js"></script>
 
+
+
+<script type="text/javascript">
+  var random = Math.random(); //生成随机数：0.32273213103830223
+  var demo = (2 << 23); //十进制数：16777216
+  var list = random * demo; //生成代表颜色的随机数：5414546.672569901
+  var num = Math.floor(list); //向下取整：5414546
+  // document.write(num.toString(16)) //生成随机颜色：529e92
+
+  var randomColor;
+  randomColor = '#' + Math.floor(Math.random() * (2 << 23)).toString(16);
+  $(".dynamiccolor").css("background-color", randomColor);
+
+</script>

@@ -42,6 +42,8 @@ navigation:
     url: /tags
   - name: 联系方式
     url: /contact
+  - name: 标签墙
+    url: /tagwall
 
 # 每页的文章数
 paginate: 8

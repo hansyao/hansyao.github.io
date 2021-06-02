@@ -13,8 +13,8 @@ permalink: /tags/
     {% for tag in site.tags %}
     <li>
       <a href="#{{ tag[0] }}">
-        <span>{{ tag[0] }}</span>
-        <span class="count">{{ tag[1] | size }}</span>
+        <span > {{ tag[0] }}</span>
+        <span class="count">({{ tag[1] | size }})</span>
       </a>
     </li>
     {% endfor %}
