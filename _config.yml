@@ -38,8 +38,8 @@ navigation:
     url: /about
   - name: 归档
     url: /archive
-  - name: 标签
-    url: /tags
+  # - name: 标签
+  #   url: /tags
   - name: 联系方式
     url: /contact
   - name: 标签墙
