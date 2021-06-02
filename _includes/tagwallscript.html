@@ -22,13 +22,13 @@
     var objects = new Array();
     var thetas = new Array();
     var phis = new Array();
-    var r = 300;
+    var r = 350;
     int();
     animate();
 
     function int() {
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000000);
-        camera.position.set(0, 0, 600);
+        camera.position.set(0, 0, 720);
         scene = new THREE.Scene();
         for (var i = 0; i < elements.length; i++) {
             var element = elements[i];
@@ -44,12 +44,12 @@
             objects.push(object);
         }
         renderer = new THREE.CSS3DRenderer;
-        renderer.setSize(800, 800);
+        renderer.setSize(350, 350);
         render();
         document.getElementById('canvas').appendChild(renderer.domElement);
 
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 0, 200);
+        controls.target.set(0, 0, 0);
         controls.update();
 
         window.addEventListener('resize', onWindowResize, true);

@@ -1409,8 +1409,9 @@ button[class*="btn"] {
 
 #canvas {
     background-color: #000 transparent;
-    width: 800px;
-    height: 800px;
+    // width: 800px;
+    // height: 800px;
+    width: 100%;
     border: 1px solid black transparent;
     margin: 0px;
     padding: 0px;
