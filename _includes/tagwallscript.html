@@ -1,7 +1,8 @@
 <script type="text/javascript">
     var elements = new Array();
+    var tagscount = "{{site.tags | size}}" //get size of total tags
 
-    for (var i = 1; i < 15; i++) {
+    for (var i = 1; i < tagscount; i++) {
         var el_id = "li" + i;
         var obj = document.getElementById(el_id);
         elements.push(obj);

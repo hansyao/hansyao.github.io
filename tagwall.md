@@ -14,5 +14,4 @@ permalink: /tagwall/
         {% endfor %}
     </div>
       {% include tagwallscript.html %}
-
 </body>
