@@ -5,7 +5,7 @@ permalink: /tagwall/
 --- -->
 
 <body>
-    <div id="canvas">
+    <div id="canvas" class="center">
         {% for tag in site.tags %}
         <a class="btn-gradient large" id="li{{ forloop.index }}" href="../tags/#{{ tag[0] }}"> {{ tag[0] }}
             ({{ tag[1] | size }})</a>

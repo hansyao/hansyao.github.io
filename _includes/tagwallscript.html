@@ -22,7 +22,7 @@
     var objects = new Array();
     var thetas = new Array();
     var phis = new Array();
-    var r = 350;
+    var r = 375;
     int();
     animate();
 
@@ -44,7 +44,7 @@
             objects.push(object);
         }
         renderer = new THREE.CSS3DRenderer;
-        renderer.setSize(350, 350);
+        renderer.setSize(375, 375);
         render();
         document.getElementById('canvas').appendChild(renderer.domElement);
 
@@ -83,7 +83,7 @@
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(350, 350);
+        renderer.setSize(375, 375);
         render();
     }
 
