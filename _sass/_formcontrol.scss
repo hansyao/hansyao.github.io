@@ -1420,3 +1420,13 @@ button[class*="btn"] {
     top: 100px;
     left: 100px;
 }
+
+.borderone {
+    border:solid 1px rgb(134, 134, 134);
+}
+.bordertwo {
+    border:dotted 1px rgb(134, 134, 134);
+}
+.borderthree {
+    border:dashed 1px rgb(134, 134, 134);
+}

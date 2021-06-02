@@ -16,7 +16,7 @@ layout: default
         href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
     </h1>
 
-    <div clsss="meta">
+    <div class="meta">
 
       <span class="author">
         {{ post.author }}
@@ -60,7 +60,7 @@ layout: default
       <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
     </h1>
 
-    <div clsss="meta">
+    <div class="meta">
 
       <span class="author">
         {{ post.author }}
@@ -85,13 +85,17 @@ layout: default
       {%   if post.content contains site.excerpt_separator or post.content != post.excerpt %}{{ post.excerpt }}
       {%   else %}{{ post.content | lstrip | split: "
 " | first }}{% endif %}
-      <p>
-        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">Read More</a>
-      </p>
     </div>
+    <p>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">Read More</a>
+    </p>
+    
+    
   </article>
   {% endunless %}
+  <div class="borderthree"></div>
   {% endfor %}
+  
 </div>
 
 <div class="pagination">
