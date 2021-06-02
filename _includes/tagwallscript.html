@@ -1,10 +1,16 @@
 <script type="text/javascript">
     var elements = new Array();
     var tagscount = "{{site.tags | size}}" //get size of total tags
+    var randomColor;
+
+
+    // $(".dynamiccolor").css("background-color", randomColor);             // css 样式
 
     for (var i = 1; i <= tagscount; i++) {
         var el_id = "li" + i;
         var obj = document.getElementById(el_id);
+        randomColor = '#' + Math.floor(Math.random() * (2 << 23)).toString(16);
+        document.getElementById(el_id).style.background = randomColor
         elements.push(obj);
 
     }
@@ -83,8 +89,4 @@
     // var list = random * demo; //生成代表颜色的随机数：5414546.672569901
     // var num = Math.floor(list); //向下取整：5414546
     // document.write(num.toString(16)) //生成随机颜色：529e92
-
-    var randomColor;
-    randomColor = '#' + Math.floor(Math.random() * (2 << 23)).toString(16);
-    $(".dynamiccolor").css("background-color", randomColor);
 </script>
