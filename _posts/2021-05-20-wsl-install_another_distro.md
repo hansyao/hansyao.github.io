@@ -28,6 +28,7 @@ sudo apt-get install p7zip
 4. Move the ISO to its own folder, i.e `~/fedora`
 
 5. Navigate to the directory and Extract using 7Zip
+
 ```bash
 mkdir $ISO_DIR; cd $ISO_DIR;
 7z x Fedora-Cinnamon-Live-x86_64-31-1.9.iso

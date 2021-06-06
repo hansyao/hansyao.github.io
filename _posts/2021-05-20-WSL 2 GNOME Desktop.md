@@ -26,33 +26,33 @@ __But now you can!__
 
 You've been regularly updating your distro, haven't you?
 
-```sh
+```shell
 sudo apt update
 sudo apt upgrade
 ```
 
 Install GNOME: (maybe go eat a snack while it's installing?)
 
-```sh
+```shell
 sudo apt install ubuntu-desktop gnome
 ```
 
 Open up your `~/.bashrc`:
 
-```sh
+```shell
 nano ~/.bashrc
 ```
 
 And paste this in at the end and save:
 
-```sh
+```shell
 export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
 export LIBGL_ALWAYS_INDIRECT=1
 ```
 
 If you try to start GNOME now, you'll get a lot of errors. Something along the lines of this, but a ton more errors:
 
-```sh
+```shell
 Unable to init server: Could not connect: Connection refused
 
 (gnome-session-check-accelerated:6054): Gtk-WARNING **: 11:04:51.973: cannot open display: :0
@@ -65,7 +65,7 @@ gnome-session-binary[6044]: CRITICAL: We failed, but the fail whale is dead. Sor
 
 The trick is to enable `systemd`: (note that this does break a lot of stuff such as Visual Studio Code Remote)
 
-```sh
+```shell
 git clone https://github.com/DamionGans/ubuntu-wsl2-systemd-script.git
 cd ubuntu-wsl2-systemd-script/
 bash ubuntu-wsl2-systemd-script.sh
@@ -73,7 +73,7 @@ bash ubuntu-wsl2-systemd-script.sh
 
 Now shut down WSL 2: (run this in Windows)
 
-```sh
+```dos
 wsl --shutdown
 ```
 
@@ -84,7 +84,7 @@ First, fire up your X server on Windows. Make sure you let it through your firew
 
 Now, start up Ubuntu again and start GNOME:
 
-```sh
+```shell
 gnome-session
 ```
 
