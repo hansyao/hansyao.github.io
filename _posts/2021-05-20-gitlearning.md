@@ -19,11 +19,15 @@ git config --global user.email "yourmail@example.com"
 ```shell
 git init
 ```
+
+<!-- more -->
+
 添加文件:
 ```shell
 git add filename1.txt			从工作区到暂存区(stage)
 git commit -m "added filename1.txt"   从暂存区到分支
 ```
+
 查看状态
 ```shell
 git status

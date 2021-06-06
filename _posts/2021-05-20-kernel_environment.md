@@ -21,6 +21,9 @@ toc: true
 # sudo dpkg -i *.deb
 # sudo reboot
 ```
+
+<!-- more -->
+
 ## 2. Build buildroot
 ```shell
 # cd ~/sandbox

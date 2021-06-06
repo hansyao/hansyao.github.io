@@ -14,9 +14,7 @@ permalink: /contact/
   data-cfasync="false"
   action="https://v1.oneplus-solution.com/macros/s/AKfycbzEWUMIp7dxXScbNeP3nuqmrwja_7tVDctVkCmB/exec">
   <!-- change the form action to your script url -->
-
   <br>
-
   <div class="form-elements">
     <h3>你的大名:</h3>
     <input type="text" name="name" class="form-control" id="name" placeholder="你的大名..." />
@@ -30,3 +28,5 @@ permalink: /contact/
   <!-- Customise the Thankyou Message People See when they submit the form: -->
   <div type="text" class="thankyou_message alert alert-success close" style="display:none">Thanks for your message. I will contact you soon!</div>
 </form>
+
+

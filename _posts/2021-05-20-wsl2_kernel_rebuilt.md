@@ -9,6 +9,8 @@ comments: false
 
 >Windows 10 2004 will be released to public very soon. It has been released in Windows Insider Program for a long time. In this release, the biggest improvement to me is WSL2. In WSL2, windows actually hosted a virtual machine, and WSL is actually running inside the virtual machine. That means you can run a real linux kernel and even you can build your kernel and run it. It's very convenient for study Linux kernel. You can very easily switch kernels.
 
+<!-- more -->
+
 Build linux kernel is actually very easy, you just need a Linux environment. Yes, you can also build a kernel in side WSL. In this article, I'll use Ubuntu which is the one of the most popular Linux distribution. You need install the following packages:
 
 ```shell

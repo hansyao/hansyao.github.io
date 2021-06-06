@@ -8,13 +8,14 @@ comments: false
 toc: false
 ---
 
-1. Here are some default vars for the process
+Here are some default vars for the process
 ```bash
 ISO_DIR=~/fedora;
 ROOTFS_MOUNT_DIR=/mnt/contents
 
 DISTRO_LOCATION=
 ```
+<!-- more -->
 
 1. Install Ubuntu Bash
 

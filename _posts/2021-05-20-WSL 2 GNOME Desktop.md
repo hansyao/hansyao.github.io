@@ -14,6 +14,7 @@ GNOME is one of the more complex — and that means more difficult to run — de
 
 __But now you can!__
 
+<!-- more -->
 
 ## Requirements:
  - WSL 2

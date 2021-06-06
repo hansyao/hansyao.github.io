@@ -12,6 +12,7 @@ comments: false
 ```dos
 wsl -l --all -v
 ```
+<!-- more -->
 
 2.  导出分发版为tar文件到d盘
 
