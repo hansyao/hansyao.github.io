@@ -368,11 +368,11 @@ img {
   }
 
   .site-avatar {
-    margin:0 auto;
+    margin:0;
     display: block;
     max-width: 120px;
     max-height: 120px;
-    position:absolute;   
+    // position:absolute;   
 
     @include mobile {
       max-width: 120px;
@@ -380,7 +380,7 @@ img {
     }
 
     img {
-      display: inline-block;
+      display:inline-block;
       border-radius: 2px;
     }
   }
