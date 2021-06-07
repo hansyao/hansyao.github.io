@@ -72,7 +72,7 @@ curl -H POST https://maps.googleapis.com/maps/api/js?key= | grep "apiLoad(\[" | 
     https://www.google.com/maps/vt
 
 
-很明显，如果只是对主域名[maps.googleapis.com](maps.googleapis.com)用`nginx`做反向代理的话，这个api中的上述url调用地址并不能被代理。
+很明显，如果只是对主域名[maps.googleapis.com](https://maps.googleapis.com)用`nginx`做反向代理的话，这个api中的上述url调用地址并不能被代理。
 
 因此，我们需要做字符串替换，将上述url的域名部分替换为自己的反向代理域名。幸运的是，有开发者为`nginx`做了个字符串替换的模块[replace-filter-nginx-module](https://github.com/openresty/replace-filter-nginx-module)，可参见本文开头的[准备工作](#准备工作)部分。
 
@@ -80,7 +80,7 @@ curl -H POST https://maps.googleapis.com/maps/api/js?key= | grep "apiLoad(\[" | 
 
 # 步骤二  子域名配置文件生成 
 
-通过[步骤一](#步骤一-分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
+通过[步骤一](#步骤一\-分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
 
 ```
 maps.googleapis.com/maps-api-v3
