@@ -23,6 +23,9 @@ layout: default
       </li>
       {% endfor %}
     </ul>
+    <span class="tag borderone">共<b> {{ page.content | strip_html | strip_newlines | remove: " " | size }} </b>字 / 阅读全文约需<b> {{ 
+      page.content | strip_html | strip_newlines | remove: " " | size | divided_by: 350 | round }} </b>分钟
+    </span>
   </div>
 
   <div class="entry">
