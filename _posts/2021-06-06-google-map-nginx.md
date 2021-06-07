@@ -80,7 +80,7 @@ curl -H POST https://maps.googleapis.com/maps/api/js?key= | grep "apiLoad(\[" | 
 
 # 步骤二  子域名配置文件生成 
 
-通过[步骤一](#步骤一%20分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
+通过[步骤一](#步骤一-分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
 
 ```
 maps.googleapis.com/maps-api-v3
@@ -91,7 +91,7 @@ www.google.com/maps
 ```
 因此，为了完美使用，我们最好同时为建立4个子域名对应这4个google的域名，对应关系如下。
 
-| 反代域名 | google域名 | nginx域名配置 |
+| google域名 | 反代域名 | nginx域名配置 |
 | :---: | :---: | :---: |
 | maps.googleapi.com | v1.sample.com | include vhost/location_v1_conf.txt; |
 | maps.google.com | v2.sample.com | include vhost/location_v2_conf.txt; |
@@ -100,9 +100,9 @@ www.google.com/maps
 
 <br>
 
-这里我们写一个简单的脚本[googleapi.sh](#附：%20`googleapi.sh`源码)来一键生成配置文件， 然后运行`googleapi.sh`将得到的配置文件全部`cp`到nginx的配置文件folder里`/usr/local/nginx/conf/vhost`。并在`v1.sample.com.conf`, `v2.sample.com.conf`，`v3.sample.com.conf`，`v4.sample.com.conf`分别添加一行`include vhost/location_v?_conf.txt;` (见上对应关系表)，将配置文件包含进这4个反代域名。
+这里我们写一个简单的脚本[googleapi.sh](#附-googleapish源码)来一键生成配置文件， 然后运行`googleapi.sh`将得到的配置文件全部`cp`到nginx的配置文件folder里`/usr/local/nginx/conf/vhost`。并在`v1.sample.com.conf`, `v2.sample.com.conf`，`v3.sample.com.conf`，`v4.sample.com.conf`分别添加一行`include vhost/location_v?_conf.txt;` (见上对应关系表)，将配置文件包含进这4个反代域名。
 
-完成后，将调用谷歌地图api时将maps.googleapi.com改成反向代理的域名`v1.sample.com.conf`， 然后重启nginx服务器`systemctl restart nginx`，测试成功一切完美，包括所有地图图层、街景、地标图片等在墙内均正常显示。可参见本站例子-[联系方式](https://hansyao.github.io/contact/)中的谷歌地图。
+完成后，在调用谷歌地图api时将maps.googleapi.com改成反向代理的域名`v1.sample.com`， 然后重启nginx服务器`systemctl restart nginx`，测试成功一切完美，包括所有地图图层、街景、地标图片等在墙内均正常显示。可参见本站例子-[联系方式](https://hansyao.github.io/contact/)中的谷歌地图。
 
 `googleapi.sh`运行显示结果如下：
 ```bash
