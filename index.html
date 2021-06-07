@@ -56,7 +56,7 @@ layout: default
   {% for post in paginator.posts %}
   {% unless post.pinned %}
   <article class="post">
-    <h1>
+    <h1 class="glyphicon glyphicon-book title">
       <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
     </h1>
 
