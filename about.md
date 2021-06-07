@@ -12,3 +12,8 @@ permalink: /about/
 
 
 >本站所有博文除了特别注明外皆为原创，转载请注明来源。
+
+
+<img align="left"  src="https://github-readme-stats.vercel.app/api?username=hansyao&count_private=true&show_icons=true&theme=onelight&hide=issues"/>
+<img  src="https://github-readme-stats.vercel.app/api/top-langs/?username=hansyao&layout=compact&theme=onelight"/>
+
