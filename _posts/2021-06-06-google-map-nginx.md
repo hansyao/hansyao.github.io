@@ -80,7 +80,7 @@ curl -H POST https://maps.googleapis.com/maps/api/js?key= | grep "apiLoad(\[" | 
 
 # 步骤二  子域名配置文件生成 
 
-通过[步骤一](#步骤一\-分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
+通过[步骤一](#步骤一-分析)的分析，我们现在可以很容易地编写出字符串替换和反向代理的`nginx`配置文件。理论上我们建立一个子域名+n个location配置即可，但通过web调试分析，以下域名下第一级目录的有重复性。
 
 ```
 maps.googleapis.com/maps-api-v3
