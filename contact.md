@@ -4,7 +4,6 @@ title: 联系方式
 permalink: /contact/
 ---
 
-<script src="https://v1.oneplus-solution.com/maps/api/js?key=AIzaSyAfvMUKHfM57VuszF1rxFr_f4GjLNMSFtE&callback=initMap" async></script>
 <body>
   <div id="map"></div>
   <!-- Async script executes immediately and must be after any DOM elements used in callback. -->

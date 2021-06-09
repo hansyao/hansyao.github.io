@@ -89,6 +89,8 @@ maps.google.com/maps-api-v3
 maps.gstatic.com/maps-api-v3
 www.google.com/maps
 ```
+<!-- {: #codeblockcopy1} -->
+
 因此，为了完美使用，我们最好同时为建立4个子域名对应这4个google的域名，对应关系如下。
 
 | google域名 | 反代域名 | nginx域名配置 |

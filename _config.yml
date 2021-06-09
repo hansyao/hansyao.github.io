@@ -102,6 +102,10 @@ location:
   longitude: -0.2416807
 
 
+## => Clipboard
+##############################
+# clipboard: false
+
 #
 # !! 以下所有设置都不需要更改 !!
 #
