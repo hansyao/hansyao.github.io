@@ -9,11 +9,10 @@ toc: true
 mermaid: true
 ---
 
-# Socket通信流程
+## Socket通信流程
 
 ```mermaid
 graph TD
-
     connect --> server_accept
     client_send --> server_receive
     server_send --> client_receive
@@ -35,15 +34,12 @@ graph TD
     server_bind -->|监听端口|server_listen
     server_listen -->|设置监听队列|server_accept
     server_accept -->|循环等待客户端连接|server_receive
-    server_receive -->| |server_send
+    server_receive -->|发送|server_send
     server_send --> | | server_trigger
     server_trigger -->| | server_close
-    
     end
 
-
     subgraph one
-
     client([客户端])
     client_socket("socket()")
     connect("connect()")
@@ -56,9 +52,7 @@ graph TD
     connect -->|发送|client_send
     client_send -->|接收|client_receive
     client_receive -->|发送|client_close
-
     end
-    
 ```
 
 
