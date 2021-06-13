@@ -68,11 +68,9 @@ sudo dnf install \
 gcc-c++  \
 openssl-devel \
 ncurses-devel \
-rpcsvc \
 automake \
 libtirpc-devel \
 libicu-devel \
-oniguruma-devel \
 freetype-devel \
 libjpeg-devel \
 libpng-devel \
