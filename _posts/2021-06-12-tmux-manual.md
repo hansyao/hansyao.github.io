@@ -81,7 +81,7 @@ tmux attach -t 0
 ## 重接会话 使用伪窗口名称
 
 ```bash
-tmux attach -t xiaoqi
+tmux attach -t hans
 ```
 
 杀死会话
