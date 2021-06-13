@@ -2,6 +2,8 @@
 layout: page
 title: 联系方式
 permalink: /contact/
+googlemap: true
+
 ---
 
 <body>
