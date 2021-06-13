@@ -62,6 +62,7 @@ gettext-devel
 ```
 
 2. 其他依赖直接从官方源安装
+
 ```bash
 sudo dnf install \
 gcc-c++  \
@@ -79,7 +80,6 @@ libcurl-devel \
 sqlite-devel \
 libxml2-devel \
 gettext-devel
-
 ```
 
 3. 编译安装php
