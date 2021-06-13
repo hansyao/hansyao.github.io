@@ -50,7 +50,7 @@ gettext-devel
 
 **安装步骤**
 
-1. oniguruma-devel和rpcsvc-proto：oracel镜像源缺失源码，oniguruma-devel可以从centos源安装， rpcsvc-proto直接从github拉取源码编译安装。
+* oniguruma-devel和rpcsvc-proto：oracel镜像源缺失源码，oniguruma-devel可以从centos源安装， rpcsvc-proto直接从github拉取源码编译安装。
 
 ```bash
  sudo dnf install https://rpmfind.net/linux/centos/8-stream/PowerTools/aarch64/os/Packages/oniguruma-devel-6.8.2-2.el8.aarch64.rpm
@@ -61,7 +61,7 @@ gettext-devel
  sudo make install
 ```
 
-2. 其他依赖直接从官方源安装
+* 其他依赖直接从官方源安装
 
 ```bash
 sudo dnf install \
@@ -82,10 +82,9 @@ libxml2-devel \
 gettext-devel
 ```
 
-3. 编译安装php
+* 编译安装php
 
 ```bash
-
 cd lnmp
 sudo ./install.sh --php_option 9 --phpcache_option 1
 
