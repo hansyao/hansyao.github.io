@@ -13,7 +13,7 @@ mermaid: false
 
 <!--more-->
 
-1. 先找到电子教程网页，以沪教版七年级数学为例：
+先找到电子教程网页，以沪教版七年级数学为例：
 
 [http://sh.zhongkao.com/20091103/4aefdc51ca5d7.shtml](http://sh.zhongkao.com/20091103/4aefdc51ca5d7.shtml)
 
