@@ -19,6 +19,7 @@
     var url = query('code');
     if (url) {
         window.location = decodeURIComponent(url) + location.search;
+        alert(location.search)
     } else {
         alert('无效的请求')
     }
