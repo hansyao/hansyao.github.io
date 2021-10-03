@@ -5,7 +5,7 @@
     <title>百度云盘重定向</title>
 </head>
 <body>
-    <p>正在跳转请稍后</p>
+    <p id="redirect">正在跳转请稍后</p>
     <script>
     var query = (function() {
         var url = location.search, reg = /(?:\?|&)?([^=]+)=([^&]*)/ig, obj = {}, m;
@@ -18,7 +18,7 @@
 
     var url = query('code');
     if (url) {
-        window.location = decodeURIComponent(url) + location.search
+        document.getElementById("redirect").innerHTML = url
     } else {
         alert('无效的请求')
     }
