@@ -7,22 +7,23 @@
 <body>
     <p id="redirect">正在跳转请稍后</p>
     <script>
-    var query = (function() {
-        var url = location.search, reg = /(?:\?|&)?([^=]+)=([^&]*)/ig, obj = {}, m;
-        while (m = reg.exec(url)) obj[m[1]] = m[2];
-        return function(v) {
-            if (arguments.length == 0) return obj;
-            else return obj[v];
-        }
-    })();
+        var query = (function () {
+            var url = location.search, reg = /(?:\?|&)?([^=]+)=([^&]*)/ig, obj = {}, m;
+            while (m = reg.exec(url)) obj[m[1]] = m[2];
+            return function (v) {
+                if (arguments.length == 0) return obj;
+                else return obj[v];
+            }
+        })();
 
-    var url = query('code');
-    if (url) {
-        document.getElementById("redirect").innerHTML = "Authorization Code: " + url
-    } else {
-        alert('无效的请求')
-    }
+        var url = query('code');
+        if (url) {
+            document.getElementById("redirect").innerHTML = url;
+
+        } else {
+            document.getElementById("redirect").innerHTML = "无效的请求"
+
+        }
     </script>
 </body>
-
 </html>
