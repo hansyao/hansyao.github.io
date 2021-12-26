@@ -1,41 +1,29 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-	<head>
-		<title>OneManager jump page</title>
-	</head>
-	<body>
-		<a id="direct">No link here!</a><br>
-		If not auto jump, click the link to jump.<br>
-		如果长时间未跳转，请点击上方链接继续安装。<br>
-		<label id='test1'></label>
-		<script>
-      			var q = new Array();
-			var query = window.location.search.substring(1);
-			//document.getElementById('test1').innerHTML=query;
-			var vars = query.split("&");
-			for (var i=0;i<vars.length;i++) {
-				var pair = vars[i].split("=");
-				q[pair[0]]=pair[1];
-			}
-			var url = q['state'];
-			var code = q['code'];
-			if (!!url && !!code) {
-				url = decodeURIComponent(url);
-				if (url.indexOf("AddDisk=")>1) {
-					var lasturl = url+"&code="+code;
-				} else {
-					if (url.substr(-1)!="/") url+="/";
-					var lasturl = url+"?code="+code;
-				}
-				document.getElementById('direct').innerText = lasturl;
-				document.getElementById('direct').href = lasturl;
-// 				window.location = lasturl;
-			} else {
-				var str='Error! 有误！';
-				if (!url) str+='No url! url参数为空！';
-				if (!code) str+='No code from MS! 微软code为空！';
-				document.getElementById('test1').innerHTML=str+'<br>'+decodeURIComponent(query);
-				alert(str);
-			}
-		</script>
-	</body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>获取微软authorization code</title>
+</head>
+<body>
+    <p id="redirect">正在获取请稍后</p>
+    <script>
+        var query = (function () {
+            var url = location.search, reg = /(?:\?|&)?([^=]+)=([^&]*)/ig, obj = {}, m;
+            while (m = reg.exec(url)) obj[m[1]] = m[2];
+            return function (v) {
+                if (arguments.length == 0) return obj;
+                else return obj[v];
+            }
+        })();
+
+        var url = query('code');
+        if (url) {
+            document.getElementById("redirect").innerHTML = url;
+
+        } else {
+            document.getElementById("redirect").innerHTML = "无效的请求"
+
+        }
+    </script>
+</body>
 </html>
