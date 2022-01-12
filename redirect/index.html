@@ -10,12 +10,17 @@
 </head>
 <body>
   <div class="container col-auto">
-    <h4 id="description">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h3>
-    <h3 id="platform"></h3>
-    <h3 id="redirect"></h3>
+    	<h4> id="description">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h4>
+	<div class="input-group">
+	  <span class="input-group-text">当前平台: </span>
+	  <input type="lable" id="platform" class="form-control" placeholder="" aria-label="platform" />
+	  <span class="input-group-text">回调地址: </span>
+	  <input type="lable" id="redirect" class="form-control" placeholder="" aria-label="redirect" />
+	</div>
+	<p id="description">返回结果: </p>
   	<div class="entry">
 		  <pre><code><p id="result" name="result" >{}</p></code></pre>
-	  </div>
+	</div>
   </div>
     <script>
       function get_pure_url(url) {
@@ -55,8 +60,8 @@
       } else {
 	      p_query = "?p=" + callback.query.p
       }
-      document.getElementById("platform").innerHTML = "当前平台: " + platform;
-      document.getElementById("redirect").innerHTML = "回调地址: " + callback.url + p_query;	    
+      document.getElementById("platform").innerHTML = platform;
+      document.getElementById("redirect").innerHTML = callback.url + p_query;	    
       document.getElementById("result").innerHTML = JSON.stringify(callback.query, null, 2);
     </script>
 </body>
