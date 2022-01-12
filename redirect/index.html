@@ -47,7 +47,9 @@
       var url = document.location.href;
       var callback = getQueryObject(url);
       var platform = callback.query.p;
-      
+      if (platform == "undefined") {
+	      platform = "平台未定义"
+      }
       document.getElementById("redirect").innerHTML = "当前平台: " + platform;
       document.getElementById("result").innerHTML = JSON.stringify(callback, null, 2);
     </script>
