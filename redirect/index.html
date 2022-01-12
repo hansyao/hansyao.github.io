@@ -44,15 +44,13 @@
         return obj2;
       }
       
-		  var mypath = document.location.pathname;
+      var mypath = document.location.pathname;
       var platform = mypath.split("/")[mypath.length - 1];
-			var callback = getQueryObject(jd_wxcallback);
+      var callback = getQueryObject(document.location.href);
       var callback["platform"] = platform;
       
       document.getElementById("redirect").innerHTML = platform;
-      document.getElementById("result").innerHTML = JSON.stringify(callback.[platform], null. 2);
-     
-  		}
+      document.getElementById("result").innerHTML = JSON.stringify(callback, null. 2);
     </script>
 </body>
 </html>
