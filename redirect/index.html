@@ -50,7 +50,7 @@
       var callback = getQueryObject(url);
       var platform = callback.query.p;
       if (platform === undefined) {
-	      platform = "平台未定义";
+	      platform = "平台未指定";
 	      p_query = ""
       } else {
 	      p_query = "?p=" + callback.query.p
