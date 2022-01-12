@@ -10,7 +10,9 @@
 </head>
 <body>
   <div class="container col-auto">
-    <h3 id="redirect">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h3>
+    <h4 id="description">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h3>
+    <h3 id="platform"></h3>
+    <h3 id="redirect"></h3>
   	<div class="entry">
 		  <pre><code><p id="result" name="result" >{}</p></code></pre>
 	  </div>
@@ -31,7 +33,7 @@
         var reg = /([^?&=]+)=([^?&=]*)/g;
         var pure_url = get_pure_url(url);
         search.replace(reg, function (rs, $1, $2) {
-          var name = decodeURIComponent($1);
+        var name = decodeURIComponent($1);
           var val = decodeURIComponent($2);
           val = String(val);
           obj[name] = val;
@@ -48,10 +50,14 @@
       var callback = getQueryObject(url);
       var platform = callback.query.p;
       if (platform == "undefined") {
-	      platform = "平台未定义"
+	      platform = "平台未定义";
+	      p_query = ""
+      } else {
+	      p_query = "?p=" + callback.query.p
       }
-      document.getElementById("redirect").innerHTML = "当前平台: " + platform;
-      document.getElementById("result").innerHTML = JSON.stringify(callback, null, 2);
+      document.getElementById("platform").innerHTML = "当前平台: " + platform;
+      document.getElementById("redirect").innerHTML = "回调地址: " + callback.url + p_query;	    
+      document.getElementById("result").innerHTML = JSON.stringify(callback.query, null, 2);
     </script>
 </body>
 </html>
