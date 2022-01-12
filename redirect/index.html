@@ -44,13 +44,12 @@
         return obj2;
       }
       
-      var mypath = document.location.pathname;
-      var platform = mypath.split("/")[mypath.length - 1];
-      var callback = getQueryObject(document.location.href);
-      var callback["platform"] = platform;
+      var url = document.location.href;
+      var callback = getQueryObject(url);
+      var platform = callback.query.p;
       
-      document.getElementById("redirect").innerHTML = platform;
-      document.getElementById("result").innerHTML = JSON.stringify(callback, null. 2);
+      document.getElementById("redirect").innerHTML = "当前平台: " + platform;
+      document.getElementById("result").innerHTML = JSON.stringify(callback, null, 2);
     </script>
 </body>
 </html>
