@@ -62,7 +62,8 @@
 			platform = "平台未指定";
 			p_query = ""
 		} else {
-			p_query = "?p=" + callback.query.p
+			p_query = "?p=" + callback.query.p,
+			delete callback.query.p
 		}
 		document.getElementById("platform").innerHTML = platform;
 		document.getElementById("redirect").innerHTML = callback.url + p_query;	    
