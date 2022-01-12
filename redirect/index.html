@@ -1,71 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-    <title>OAuth2.0回调接口</title>
-  	<link href="https://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" />
+	<title>OAuth2.0回调接口</title>
+	<link href="https://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-  <div class="container col-auto">
-    	<h4 id="description">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h4>
-	<div class="container col-auto input-group">
-	  <span class="input-group-text">当前平台: 
-	       <pre><code><p id="platform" name="platform" >{}</p></code></pre>
-	  </span>
-	  <span class="input-group-text">回调地址: 
-	       <pre><code><p id="redirect" name="redirect" >{}</p></code></pre>
-          </span>
+	<div class="container col-auto">
+		<h4 id="description">支持腾讯，谷歌，百度，微软，阿里等Oauth2.0回调标准</h4>
+		<br>
+		<p>当前平台:</p> 
+		<div class="entry">
+			<pre><code><p id="platform" name="platform" >{}</p></code></pre>
+		</div>
+		<p>回调地址:</p>
+		<div class="entry">
+			<pre><code><p id="redirect" name="redirect" >{}</p></code></pre>
+		</div>
+		<br>
+		<p id="description">返回结果: </p>
+		<div class="entry">
+			<pre><code><p id="result" name="result" >{}</p></code></pre>
+		</div>
 	</div>
-	<br>
-	<p id="description">返回结果: </p>
-  	<div class="entry">
-		  <pre><code><p id="result" name="result" >{}</p></code></pre>
-	</div>
-  </div>
-    <script>
-      function get_pure_url(url) {
-        var url = url == null ? window.location.href : url;
-        url = url.split("?")[0];
+	<script>
+		function get_pure_url(url) {
+			var url = url == null ? window.location.href : url;
+			url = url.split("?")[0];
 
-        return url;
-      }
+			return url;
+		}
 
-      function getQueryObject(url) {
-        var url = url == null ? window.location.href : url;
-        var search = url.substring(url.lastIndexOf("?") + 1);
-        var obj = {};
-        var obj2 = {};
-        var reg = /([^?&=]+)=([^?&=]*)/g;
-        var pure_url = get_pure_url(url);
-        search.replace(reg, function (rs, $1, $2) {
-        var name = decodeURIComponent($1);
-          var val = decodeURIComponent($2);
-          val = String(val);
-          obj[name] = val;
-          return rs;
-        });
-        obj2["full_url"] = url;
-        obj2["url"] = pure_url;
-        obj2["query"] = obj;
-        // obj["query"] = JSON.parse(JSON.stringify(obj, 2, null));
-        return obj2;
-      }
-      
-      var url = document.location.href;
-      var callback = getQueryObject(url);
-      var platform = callback.query.p;
-      if (platform === undefined) {
-	      platform = "平台未指定";
-	      p_query = ""
-      } else {
-	      p_query = "?p=" + callback.query.p
-      }
-      document.getElementById("platform").innerHTML = platform;
-      document.getElementById("redirect").innerHTML = callback.url + p_query;	    
-      document.getElementById("result").innerHTML = JSON.stringify(callback.query, null, 2);
-    </script>
+		function getQueryObject(url) {
+			var url = url == null ? window.location.href : url;
+			var search = url.substring(url.lastIndexOf("?") + 1);
+			var obj = {};
+			var obj2 = {};
+			var reg = /([^?&=]+)=([^?&=]*)/g;
+			var pure_url = get_pure_url(url);
+			search.replace(reg, function (rs, $1, $2) {
+				var name = decodeURIComponent($1);
+				var val = decodeURIComponent($2);
+
+				val = String(val);
+				obj[name] = val;
+
+				return rs;
+			});
+			obj2["full_url"] = url;
+			obj2["url"] = pure_url;
+			obj2["query"] = obj;
+			return obj2;
+		}
+
+		var url = document.location.href;
+		var callback = getQueryObject(url);
+		var platform = callback.query.p;
+		if (platform === undefined) {
+			platform = "平台未指定";
+			p_query = ""
+		} else {
+			p_query = "?p=" + callback.query.p
+		}
+		document.getElementById("platform").innerHTML = platform;
+		document.getElementById("redirect").innerHTML = callback.url + p_query;	    
+		document.getElementById("result").innerHTML = JSON.stringify(callback.query, null, 2);
+	</script>
 </body>
 </html>
