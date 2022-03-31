@@ -4,7 +4,7 @@ title: 关于本站
 permalink: /about/
 ---
 
-本站为独立博客，记录个人的一些技术和管理相关的心得体会，本站所有文章与涉及源码都托管在本人的github仓库[https://github.com/hansyao](https://github.com/badfellow)和[https://github.com/badfellow](https://github.com/badfellow)，作为与同业人士和爱好者的沟通桥梁。
+本站为独立博客，记录个人的一些技术和管理相关的心得体会，本站所有文章与涉及源码都托管在本人的github仓库[https://github.com/hansyao](https://github.com/hansyao)和[https://github.com/badfellow](https://github.com/badfellow)，作为与同业人士和爱好者的沟通桥梁。
 
 # 关于[老姚](https://hansyao.github.io):
 
