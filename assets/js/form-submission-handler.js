@@ -3,12 +3,19 @@
     function getFormData(form) {
       var elements = form.elements;
       var honeypot;
+      var message;
   
       var fields = Object.keys(elements).filter(function(k) {
         if (elements[k].name === "honeypot") {
           honeypot = elements[k].value;
           return false;
-        }
+        };
+        if (elements[k].name === "message") {
+          message = elements[k].value;
+          if message.indexof("url=") !== -1 then {
+            return false;
+          }
+        };
         return true;
       }).map(function(k) {
         if(elements[k].name !== undefined) {
