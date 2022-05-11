@@ -57,7 +57,7 @@
   
       console.debug(JSON.stringify(data));
       if (data.message.indexOf("url=") !== -1) {
-          return false;
+          formData.honeypot = true;
       };
       // If a honeypot field is filled, assume it was done so by a spam bot.
       if (formData.honeypot) {
@@ -94,10 +94,10 @@
       // bind to the submit event of our form
       var forms = document.querySelectorAll("form.gform");
       for (var i = 0; i < forms.length; i++) {
-        forms[i].addEventListener("submit", handleFormSubmit, false);
+        forms[i].addEventListener("submit", handleFormSubmit, { passive: true });
       }
     };
-    document.addEventListener("DOMContentLoaded", loaded, false);
+    document.addEventListener("DOMContentLoaded", loaded, { passive: true });
   
     function disableAllButtons(form) {
       var buttons = form.querySelectorAll("button");
