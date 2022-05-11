@@ -34,9 +34,6 @@
           for (var i = 0; i < element.length; i++) {
             var item = element.item(i);
             if (item.checked || item.selected) {
-              if (item.value.indexOf("url=") !== -1) {
-                  return false;
-              };
               data.push(item.value);
             }
           }
@@ -59,6 +56,9 @@
       var data = formData.data;
   
       console.debug(JSON.stringify(data));
+      if (data.message.indexOf("url=") !== -1) {
+          return false;
+      };
       // If a honeypot field is filled, assume it was done so by a spam bot.
       if (formData.honeypot) {
         return false;
