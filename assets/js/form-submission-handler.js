@@ -85,9 +85,11 @@
           if data[k].indexOf("url=") == -1 then {
             return encodeURIComponent(k) + "=" + encodeURIComponent(data[k])
           } else {
-            location.reload()
+            return null;
           };
       }).join('&');
+      if encoded === null then
+        return false;
       xhr.send(encoded);
     }
     
