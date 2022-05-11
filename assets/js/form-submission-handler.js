@@ -3,7 +3,6 @@
     function getFormData(form) {
       var elements = form.elements;
       var honeypot;
-      var message;
   
       var fields = Object.keys(elements).filter(function(k) {
         if (elements[k].name === "honeypot") {
