@@ -82,14 +82,9 @@
       };
       // url encode form data for sending as post data
       var encoded = Object.keys(data).map(function(k) {
-          if data[k].indexOf("url=") == -1 then {
             return encodeURIComponent(k) + "=" + encodeURIComponent(data[k])
-          } else {
-            return null;
           };
       }).join('&');
-      if encoded === null then
-        return false;
       xhr.send(encoded);
     }
     
