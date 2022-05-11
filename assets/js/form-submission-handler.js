@@ -84,6 +84,8 @@
       var encoded = Object.keys(data).map(function(k) {
           if data[k].indexOf("url=") == -1 then {
             return encodeURIComponent(k) + "=" + encodeURIComponent(data[k])
+          } else {
+            location.reload()
           };
       }).join('&');
       xhr.send(encoded);
