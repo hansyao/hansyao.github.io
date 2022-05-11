@@ -18,7 +18,6 @@
           return elements[k].item(0).name;
         }
       }).filter(function(item, pos, self) {
-        console.debug(pos + item);
         return self.indexOf(item) == pos && item;
       });
   
@@ -50,7 +49,6 @@
       formData.formGoogleSheetName = form.dataset.sheet || "responses"; // default sheet name
       formData.formGoogleSendEmail
         = form.dataset.email || ""; // no email by default
-      console.debug(JSON.stringify(JSON.parse(formdata)));
       return {data: formData, honeypot: honeypot};
     }
   
@@ -60,6 +58,7 @@
       var formData = getFormData(form);
       var data = formData.data;
   
+      console.debug(JSON.stringify(data));
       // If a honeypot field is filled, assume it was done so by a spam bot.
       if (formData.honeypot) {
         return false;
