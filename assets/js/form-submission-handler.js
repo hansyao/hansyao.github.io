@@ -18,7 +18,7 @@
           return elements[k].item(0).name;
         }
       }).filter(function(item, pos, self) {
-        return self.indexOf(item) == pos && item;
+        console.debug(pos + item);
       });
   
       var formData = {};
@@ -49,7 +49,7 @@
       formData.formGoogleSheetName = form.dataset.sheet || "responses"; // default sheet name
       formData.formGoogleSendEmail
         = form.dataset.email || ""; // no email by default
-  
+      console.debug(JSON.stringify(JSON.parse(formdata)));
       return {data: formData, honeypot: honeypot};
     }
   
