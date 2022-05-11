@@ -19,6 +19,7 @@
         }
       }).filter(function(item, pos, self) {
         console.debug(pos + item);
+        return self.indexOf(item) == pos && item;
       });
   
       var formData = {};
