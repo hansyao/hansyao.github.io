@@ -34,7 +34,7 @@
           for (var i = 0; i < element.length; i++) {
             var item = element.item(i);
             if (item.checked || item.selected) {
-              if item.value.indexof("url=") !== -1 then {
+              if (item.value.indexof("url=") !== -1) then {
                   return false;
               };
               data.push(item.value);
