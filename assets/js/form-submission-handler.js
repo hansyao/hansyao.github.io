@@ -63,7 +63,7 @@
   
       // check formdata
       for (var i = 0; i < data.length; i++) {
-         console.log(data[i])
+         console.debug(data[i])
       };
 
       disableAllButtons(form);
