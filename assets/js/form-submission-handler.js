@@ -10,12 +10,6 @@
           honeypot = elements[k].value;
           return false;
         };
-        if (elements[k].name === "message") {
-          message = elements[k].value;
-          if message.indexof("url=") !== -1 then {
-            return false;
-          }
-        };
         return true;
       }).map(function(k) {
         if(elements[k].name !== undefined) {
@@ -66,8 +60,13 @@
       // If a honeypot field is filled, assume it was done so by a spam bot.
       if (formData.honeypot) {
         return false;
-      }
+      };
   
+      // check formdata
+      for (var i = 0; i < data.length; i++) {
+         console.log(data[i])
+      };
+
       disableAllButtons(form);
       var url = form.action;
       var xhr = new XMLHttpRequest();
