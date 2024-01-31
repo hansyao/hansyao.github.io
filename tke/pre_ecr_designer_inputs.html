@@ -161,7 +161,7 @@
 
 		var args = [];
 		var trackingId = '';
-		var subject = 'pre-ECR tracking: ' + trackingId;
+		var subject = 'pre-ECR tracking:' + getQueryObject(document.location.href).query.title;
 
 		var myselect1 = document.getElementById("group1");
 		var index1 = myselect1.selectedIndex;
@@ -214,7 +214,7 @@
 	var url = document.location.href;
 	var callback = getQueryObject(url);
 
-	document.getElementById("itemLink").innerHTML = callback.query.title;;
+	document.getElementById("itemLink").innerHTML = callback.query.title;
 	document.getElementById("itemLink").href = callback.query.redirect;
 
 </script>
