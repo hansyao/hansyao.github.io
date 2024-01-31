@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pre-ECR designer inputs</title>
+
+	<style>
+		table {
+			border-collapse: collapse;
+			border: 2px solid rgb(140 140 140);
+			font-family: sans-serif;
+			font-size: 0.8rem;
+			letter-spacing: 1px;
+		}
+
+		caption {
+			caption-side: bottom;
+			padding: 10px;
+			font-weight: bold;
+		}
+
+		thead,
+		tfoot {
+			background-color: rgb(228 240 245);
+		}
+
+		th,
+		td {
+			border: 1px solid rgb(160 160 160);
+			padding: 8px 10px;
+		}
+
+		td:last-of-type {
+			text-align: left;
+		}
+
+		tbody>tr:nth-of-type(even) {
+			background-color: rgb(237 238 242);
+		}
+
+		tfoot th {
+			text-align: right;
+		}
+
+		tfoot td {
+			font-weight: bold;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>描述</th>
+					<th>输入</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="trackingId">pre-ECR</td>
+					<td><a id='itemLink' href="#" target="_blank"></a></td>
+				</tr>
+				<tr>
+					<td>Design Type</td>
+					<td>
+						<select id="groupDesignType" title="请选择..." name="select" required>
+							<option value="0">请选择...</option>
+							<option value="1">ECR</option>
+							<option value="2">NPR</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>ECR/NPR Number</td>
+					<td><input id='ecrNumber' type="input" title="ECR/NPR Number" required></td>
+				</tr>
+				<tr>
+					<td>planned System ECO Date</td>
+					<td><input id="plannedSysEcoDate" type="date" title="Planned System ECO Date" required></td>
+				</tr>
+				<tr>
+					<td>方案建议来源 <br> Source of Suggested Solution</td>
+					<td>
+						<select id="group1" title="请选择..." required>
+							<option value="0">请选择...</option>
+							<option value="1">PDC建议方案(PDC Proposal Solution)</option>
+							<option value="2">CE方案(CE Proposal Solution)</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>标配/选配类型 <br> Standard/Option Type</td>
+					<td>
+						<select id="group2" title="请选择..." required>
+							<option value="0" required>请选择...</option>
+							<option value="1">标配 S</option>
+							<option value="2">选配1 O1</option>
+							<option value="3">选配2 O2</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>工程变更建议发布流程 <br> ECR Release Process Proposal</td>
+					<td>
+						<select id="group3" title="请选择..." required>
+							<option value="0">请选择...</option>
+							<option value="1">ECR/ECO流程 ECR/ECO Process</option>
+							<option value="2">SPDP流程 SPDP Process</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>开发方建议方案 <br> Developer's Proposal</td>
+					<td><textarea id="proposal" cols=32 rows=10 required="true" placeholder="请输入建议方案..."></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<tr>
+			<td><input name="close" type="button" onclick="clearAll()" value="清除"></td>
+			<td><input name="submit" type="button" onclick="getMailtoUrl()" value="提交"></td>
+		</tr>
+	</div>
+</body>
+
+<script>
+	function get_pure_url(url) {
+		var url = url == null ? window.location.href : url;
+		url = url.split("?")[0];
+
+		return url;
+	}
+
+	function getQueryObject(url) {
+		var url = url == null ? window.location.href : url;
+		var search = url.substring(url.lastIndexOf("?") + 1);
+		var obj = {};
+		var obj2 = {};
+		var reg = /([^?&=]+)=([^?&=]*)/g;
+		var pure_url = get_pure_url(url);
+		search.replace(reg, function (rs, $1, $2) {
+			var name = decodeURIComponent($1);
+			var val = decodeURIComponent($2);
+
+			val = String(val);
+			obj[name] = val;
+
+			return rs;
+		});
+		obj2["full_url"] = url;
+		obj2["url"] = pure_url;
+		obj2["query"] = obj;
+		return obj2;
+	}
+
+	function getMailtoUrl() {
+
+		var args = [];
+		var trackingId = '';
+		var subject = 'pre-ECR tracking: ' + trackingId;
+
+		var myselect1 = document.getElementById("group1");
+		var index1 = myselect1.selectedIndex;
+
+		var myselect2 = document.getElementById("group2");
+		var index2 = myselect2.selectedIndex;
+
+		var myselect3 = document.getElementById("group3");
+		var index3 = myselect3.selectedIndex;
+		console.log(myselect3.options[index3].text);
+
+		if (typeof trackingId !== 'undefined') {
+			args.push('subject=' + encodeURIComponent(subject));
+		};
+
+		var body = [
+			getQueryObject(document.location.href).query.id,
+			document.getElementById("groupDesignType").options[document.getElementById("groupDesignType").selectedIndex].text,
+			document.getElementById("ecrNumber").value,
+			document.getElementById("plannedSysEcoDate").value,
+			myselect2.options[index2].text,
+			myselect2.options[index2].text,
+			myselect3.options[index3].text,
+			document.getElementById("proposal").value
+		];
+
+		if (typeof body !== 'undefined') {
+			args.push('body=' + encodeURIComponent(JSON.stringify(body)))
+		};
+
+		var url = 'mailto:' + encodeURIComponent('tkecn.ccg@tkelevator.com');
+		if (args.length > 0) {
+			url += '?' + args.join('&') + encodeURIComponent('\n\n' + '-----------' + '龙行龘龘 前程朤朤' + '-----------');
+		}
+		window.location = url;
+		return url;
+	};
+
+	function clearAll() {
+		document.getElementById("groupDesignType").selectedIndex = 0;
+		document.getElementById("plannedSysEcoDate").value = null;
+		document.getElementById("ecrNumber").value = null;
+		document.getElementById("group1").selectedIndex = 0;
+		document.getElementById("group2").selectedIndex = 0;
+		document.getElementById("group3").selectedIndex = 0;
+		document.getElementById("proposal").value = null;
+
+	}
+
+	var url = document.location.href;
+	var callback = getQueryObject(url);
+
+	document.getElementById("itemLink").innerHTML = callback.query.title;;
+	document.getElementById("itemLink").href = callback.query.redirect;
+
+</script>
+
+</html>
